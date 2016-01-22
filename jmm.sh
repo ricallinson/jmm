@@ -1,5 +1,31 @@
 export JMM_VERSION="0.0.1"
 
+# Helper functions.
+
+jmm_helper_find_up() {
+  local path
+  path=$1
+  while [ "$path" != "" ] && [ ! -d "$path/$2" ]; do
+    path=${path%/*}
+  done
+  echo "$path"
+}
+
+jmm_helper_find_src() {
+  local dir
+  dir="$(jmm_helper_find_up $1 'src')"
+  if [ -e "$dir/src" ]; then
+    echo "$dir/src"
+  fi
+}
+
+jmm_helper_resolve() {
+    cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
+    echo "`pwd -P`" # output full, link-resolved path
+}
+
+# Commands.
+
 jmm_run() {
 	@javac -d . ./Test.java
 	@jar cf ./test.jar ./github/com/ricallinson/test/Test.class
@@ -10,6 +36,28 @@ jmm_run() {
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
+}
+
+jmv_here() {
+	local wPath
+    if [ -z $1 ]; then
+        wPath=$(jmm_helper_find_src $PWD)
+        wPath=${wPath%/*}
+    else
+        wPath="`jmm_helper_resolve \"$2\"`"
+    fi
+    if [ -z $wPath ]; then
+        echo
+        echo "This command must be run in a Jmm workspace"
+        echo
+        return 0
+    fi
+    mkdir -p $wPath/bin
+    mkdir -p $wPath/pkg
+    mkdir -p $wPath/src
+    export JMMPATH=$wPath
+    export PATH=$PATH:$JMMPATH/bin
+    jmm_env
 }
 
 jmm_version() {
@@ -72,7 +120,7 @@ jmm() {
 		echo "TODO"
 	;;
 	"here" )
-		echo "TODO"
+		jmv_here $2
 	;;
 	"install" )
 		echo "TODO"
