@@ -2,6 +2,24 @@ export JMM_VERSION="0.0.1"
 
 # Helper functions.
 
+jmm_helper_path_resolve() {
+	if [ ${1:0:1} = "." ]; then # if starts with a .
+        echo $(pwd)/$1
+    elif [ ${1:0:1} = "~" ]; then # if starts with a ~
+    	echo  $(pwd)/$1
+    elif [ ${1:0:1} = "/" ]; then # if starts with a /
+        echo  $1
+    else
+    	echo $(pwd)/$1
+    fi
+}
+
+jmm_helper_get_class_path() {
+	absPath=$(jmm_helper_path_resolve $1)
+	echo $absPath
+	# diff  <echo "$JMMPATH" <echo "$(pwd)/$1"
+}
+
 jmm_helper_find_up() {
   local path
   path=$1
@@ -26,13 +44,13 @@ jmm_helper_resolve() {
 
 # Commands.
 
-jmm_run() {
-	@javac -d . ./Test.java
-	@jar cf ./test.jar ./github/com/ricallinson/test/Test.class
-	@java -cp ./test.jar github.com.ricallinson.test.Test
-	@rm -rf ./github
-	@rm test.jar
-}
+# jmm_run() {
+# 	@javac -d . ./Test.java
+# 	@jar cf ./test.jar ./github/com/ricallinson/test/Test.class
+# 	@java -cp ./test.jar github.com.ricallinson.test.Test
+# 	@rm -rf ./github
+# 	@rm test.jar
+# }
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
@@ -58,6 +76,18 @@ jmv_here() {
     export JMMPATH=$wPath
     export PATH=$PATH:$JMMPATH/bin
     jmm_env
+}
+
+jmm_run() {
+	runFile=$1
+	runDir=${runFile%/*}
+	curDir=$(pwd)
+	# echo $runDir
+	# javac -d $runFile
+	echo "$(jmm_helper_get_class_path $runFile)"
+	# jar cf ./test.jar ./github/com/ricallinson/test/Test.class
+	# java -cp ./test.jar github.com.ricallinson.test.Test
+	# echo $curDir
 }
 
 jmm_version() {
@@ -129,7 +159,7 @@ jmm() {
 		echo "TODO"
 	;;
 	"run" )
-		echo "TODO"
+		jmm_run $2
 	;;
 	"test" )
 		echo "TODO"
