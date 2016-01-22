@@ -4,20 +4,22 @@ export JMM_VERSION="0.0.1"
 
 jmm_helper_path_resolve() {
 	if [ ${1:0:1} = "." ]; then # if starts with a .
-        echo $(pwd)/$1
+        echo $(pwd)${1:1}
     elif [ ${1:0:1} = "~" ]; then # if starts with a ~
-    	echo  $(pwd)/$1
+    	echo  $(pwd)${1:1}
     elif [ ${1:0:1} = "/" ]; then # if starts with a /
         echo  $1
     else
-    	echo $(pwd)/$1
+    	echo $(pwd)$1
     fi
 }
 
 jmm_helper_get_class_path() {
 	absPath=$(jmm_helper_path_resolve $1)
-	echo $absPath
-	# diff  <echo "$JMMPATH" <echo "$(pwd)/$1"
+	jmmSize=${#JMMPATH}
+	absSize=${#absPath}
+	absPath=${absPath:0:absSize-5} # remove .class
+	echo ${absPath:$jmmSize}
 }
 
 jmm_helper_find_up() {
