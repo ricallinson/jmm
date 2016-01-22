@@ -1,6 +1,6 @@
 # Java--
 
-A joke created after having coffee with a fellow engineer.
+A joke created after having coffee with a fellow engineer. Java-- is taking Java in a different direction by using highly opinionated choices as to what should or should not be used from the core language. Java-- is not a new language, it's just a collection of tools that let you work with Java in a different way.
 
 ## Manual Install
 
