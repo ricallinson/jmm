@@ -38,11 +38,11 @@ Prints the values of all Java-- environment variables.
 
 ### jmm here
 
-Creates a new Java-- workspace at the given path and exports the JMMPATH to that location.
+Creates a new Java-- workspace at the given path and exports the JMMPATH as that directory.
 
 	jmm here ./some/dir
 
-Determine if the current directory part of a Java-- workspace. If it is export the JMMPATH as that workspace.
+Determine if the current directory is part of a Java-- workspace. If it is export the JMMPATH as that directory.
 
 	jmm here
 
