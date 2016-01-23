@@ -78,11 +78,11 @@ jmm_run() {
 	classPaths=""
 	for file; do
 		classFiles="$classFiles $file"
-		classPaths="$classPaths ./$(jmm_helper_get_class_path $file).class"
+		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
 	done
-	javac -d ./ $classFiles
-	jar cf $JMMPATH/pkg/test.jar $classPaths
-	java -cp $JMMPATH/pkg/test.jar $classPath
+	javac -d $JMMPATH/pkg $classFiles
+	jar cf $JMMPATH/bin/test.jar $classPaths
+	java -cp $JMMPATH/bin/test.jar $classPath
 }
 
 jmm_version() {
