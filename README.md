@@ -16,6 +16,10 @@ To activate jmm, you need to source it from your shell:
 
 I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to have it automatically sourced upon login.
 
+## Run Tests
+
+	./test/run.sh
+
 ## Usage
 
 ### jmm build
