@@ -109,6 +109,21 @@ jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
 }
 
+jmm_get() { # currently only works with github
+    for module; do
+        $(curl -s -O -L $module/archive/master.zip)
+        # handle not found case
+        moduleDir=${module//[\.]/\/}
+        rm -rf $JMMPATH/src/$moduleDir
+        unzip -qq ./master.zip -d $JMMPATH/src/$moduleDir
+        moduleName=$(basename $module)
+        mv $JMMPATH/src/$moduleDir/$moduleName-master/* $JMMPATH/src/$moduleDir/$moduleName-master/..
+        mv $JMMPATH/src/$moduleDir/$moduleName-master/.[^.]* $JMMPATH/src/$moduleDir/$moduleName-master/..
+        rm -r $JMMPATH/src/$moduleDir/$moduleName-master
+        rm ./master.zip
+    done
+}
+
 jmv_here() {
 	local wPath
     if [ -z $1 ]; then
@@ -161,7 +176,7 @@ jmm() {
 		echo "    fix         run jmm tool fix on packages"
 		echo "    fmt         run jmmfmt on package sources"
 		echo "    generate    generate Jmm files by processing source"
-		echo "    get         download and install packages and dependencies"
+		echo "    get         download and install packages and dependencies (currently works with github.com only)"
 		echo "    here        set $JMMPATH to the given directory"
 		echo "    install     compile and install packages and dependencies"
 		echo "    list        list packages"
@@ -194,7 +209,7 @@ jmm() {
 		echo "TODO"
 	;;
 	"get" )
-		echo "TODO"
+		jmm_get "${@:2}"
 	;;
 	"here" )
 		jmv_here $2
