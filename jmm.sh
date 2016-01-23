@@ -79,8 +79,8 @@ jmm_run() {
 	classPath=$(jmm_helper_get_class_path $runFile)
 	classDir="$JMMPATH/src/$classPath"
 	javac -d ./ $runFile
-	jar cf ./test.jar ./$classPath.class
-	java -cp ./test.jar $classPath
+	jar cf $JMMPATH/pkg/test.jar ./$classPath.class
+	java -cp $JMMPATH/pkg/test.jar $classPath
 }
 
 jmm_version() {
