@@ -66,7 +66,13 @@ jmm_helper_build_jar() {
 # Commands.
 
 jmm_build() {
-	echo "todo"
+    # need to find all dependancies and add those files too
+    # need to find the file that has the main method and make that first in the list
+    files=""
+    for file in $(find $1 -name '*.java' ); do
+        files="$files $file"
+    done
+    jmm_helper_build_jar $files
 }
 
 jmm_clean() {
@@ -144,7 +150,7 @@ jmm() {
 		echo
 	;;
 	"build" )
-		jmm_build
+		jmm_build $2
 	;;
 	"clean" )
 		jmm_clean
