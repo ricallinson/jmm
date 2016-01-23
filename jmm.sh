@@ -53,6 +53,8 @@ jmm_helper_build_jar() {
 	mkdir -p $JMMPATH/bin
 	mkdir -p $JMMPATH/pkg
 	jarName=$(jmm_helper_get_dir_name $1)
+    classPath=$(jmm_helper_get_class_path $1)
+    classPath=${classPath//[\/]/\.}
 	classFiles=""
 	classPaths=""
 	for file; do
@@ -60,7 +62,7 @@ jmm_helper_build_jar() {
 		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
 	done
 	javac -d $JMMPATH/pkg $classFiles
-	jar cf $JMMPATH/bin/$jarName.jar $classPaths
+	jar cfe $JMMPATH/bin/$jarName.jar $classPath $classPaths
 }
 
 # Commands.
@@ -112,10 +114,8 @@ jmv_here() {
 
 jmm_run() {
 	jmm_helper_build_jar "$@"
-	classPath=$(jmm_helper_get_class_path $1)
-	classPath=${classPath//[\/]/\.}
 	jarName=$(jmm_helper_get_dir_name $1)
-	java -cp $JMMPATH/bin/$jarName.jar $classPath
+	java -jar $JMMPATH/bin/$jarName.jar
 }
 
 jmm_version() {
