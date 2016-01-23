@@ -4,14 +4,14 @@ export JMM_VERSION="0.0.1"
 
 jmm_helper_path_resolve() {
 	if [ ${1:0:1} = "." ]; then # if starts with a .
-        echo $(pwd)${1:1}
-    elif [ ${1:0:1} = "~" ]; then # if starts with a ~
-    	echo  $(pwd)${1:1}
-    elif [ ${1:0:1} = "/" ]; then # if starts with a /
-        echo  $1
-    else
-    	echo $(pwd)$1
-    fi
+		echo $(pwd)${1:1}
+	elif [ ${1:0:1} = "~" ]; then # if starts with a ~
+		echo  $(pwd)${1:1}
+	elif [ ${1:0:1} = "/" ]; then # if starts with a /
+		echo  $1
+	else
+		echo $(pwd)$1
+	fi
 }
 
 jmm_helper_get_dir_name() {
@@ -31,7 +31,7 @@ jmm_helper_find_up() {
   local path
   path=$1
   while [ "$path" != "" ] && [ ! -d "$path/$2" ]; do
-    path=${path%/*}
+	path=${path%/*}
   done
   echo "$path"
 }
@@ -40,21 +40,21 @@ jmm_helper_find_src() {
   local dir
   dir="$(jmm_helper_find_up $1 'src')"
   if [ -e "$dir/src" ]; then
-    echo "$dir/src"
+	echo "$dir/src"
   fi
 }
 
 jmm_helper_resolve() {
-    cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
-    echo "`pwd -P`" # output full, link-resolved path
+	cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
+	echo "`pwd -P`" # output full, link-resolved path
 }
 
 jmm_helper_build_jar() {
 	mkdir -p $JMMPATH/bin
 	mkdir -p $JMMPATH/pkg
 	jarName=$(jmm_helper_get_dir_name $1)
-    classPath=$(jmm_helper_get_class_path $1)
-    classPath=${classPath//[\/]/\.}
+	classPath=$(jmm_helper_get_class_path $1)
+	classPath=${classPath//[\/]/\.}
 	classFiles=""
 	classPaths=""
 	for file; do
@@ -66,38 +66,38 @@ jmm_helper_build_jar() {
 }
 
 jmm_helper_resolve_imports() {
-    files=""
-    for import in $(grep ^import $1); do
-        if [ "$import" != "import" ] && [ -n $import ]; then
-            import=${import//[\.]/\/}
-            import=$(dirname $import)
-            files="$files $(jmm_helper_find_java_files ./src/$import)"
-        fi
-    done
-    echo $files
+	files=""
+	for import in $(grep ^import $1); do
+		if [ "$import" != "import" ] && [ -n $import ]; then
+			import=${import//[\.]/\/}
+			import=$(dirname $import)
+			files="$files $(jmm_helper_find_java_files ./src/$import)"
+		fi
+	done
+	echo $files
 }
 
 jmm_helper_find_java_files() {
-    files=""
-    for file in $(find $1 -name '*.java'); do
-        files="$files $file $(jmm_helper_resolve_imports $file)"
-    done
-    echo $files
+	files=""
+	for file in $(find $1 -name '*.java'); do
+		files="$files $file $(jmm_helper_resolve_imports $file)"
+	done
+	echo $files
 }
 
 # Commands.
 
 jmm_build() {
-    main=""
-    files=""
-    for file in $(find $1 -name '*.java'); do
-        if [ -z $main ] && grep -q "public static void main(" "$file"; then
-            main="$file $(jmm_helper_resolve_imports $file)"
-        else
-            files="$files $file $(jmm_helper_resolve_imports $file)"
-        fi
-    done
-    jmm_helper_build_jar $main $files
+	main=""
+	files=""
+	for file in $(find $1 -name '*.java'); do
+		if [ -z $main ] && grep -q "public static void main(" "$file"; then
+			main="$file $(jmm_helper_resolve_imports $file)"
+		else
+			files="$files $file $(jmm_helper_resolve_imports $file)"
+		fi
+	done
+	jmm_helper_build_jar $main $files
 }
 
 jmm_clean() {
@@ -110,44 +110,76 @@ jmm_env() {
 }
 
 jmm_get() { # currently only works with github zip files
-    for package; do
-        $(curl -s -O -L $package/archive/master.zip)
-        if grep -q "error" "$JMMPATH/master.zip"; then
-            rm $JMMPATH/master.zip
-            echo "Package '$package' not found"
-            return 1
-        fi
-        packageDir=${package//[\.]/\/}
-        rm -rf $JMMPATH/src/$packageDir
-        unzip -qq $JMMPATH/master.zip -d $JMMPATH/src/$packageDir
-        packageName=$(basename $package)
-        mv $JMMPATH/src/$packageDir/$packageName-master/* $JMMPATH/src/$packageDir/$packageName-master/..
-        mv $JMMPATH/src/$packageDir/$packageName-master/.[^.]* $JMMPATH/src/$packageDir/$packageName-master/..
-        rm -r $JMMPATH/src/$packageDir/$packageName-master
-        rm $JMMPATH/master.zip
-    done
+	for package; do
+		$(curl -s -O -L $package/archive/master.zip)
+		if grep -q "error" "$JMMPATH/master.zip"; then
+			rm $JMMPATH/master.zip
+			echo "Package '$package' not found"
+			return 1
+		fi
+		packageDir=${package//[\.]/\/}
+		rm -rf $JMMPATH/src/$packageDir
+		unzip -qq $JMMPATH/master.zip -d $JMMPATH/src/$packageDir
+		packageName=$(basename $package)
+		mv $JMMPATH/src/$packageDir/$packageName-master/* $JMMPATH/src/$packageDir/$packageName-master/..
+		mv $JMMPATH/src/$packageDir/$packageName-master/.[^.]* $JMMPATH/src/$packageDir/$packageName-master/..
+		rm -r $JMMPATH/src/$packageDir/$packageName-master
+		rm $JMMPATH/master.zip
+	done
+}
+
+jmm_help() {
+	echo "Jmm is a tool for managing Java-- source code."
+	echo
+	echo "Java--"
+	echo
+	echo "Usage:"
+	echo
+	echo "    jmm command [arguments]"
+	echo
+	echo "The commands are:"
+	echo
+	echo "    build       compile packages and dependencies"
+	echo "    clean       remove object files"
+	echo "    doc*        show documentation for package or symbol"
+	echo "    env         print Jmm environment information"
+	echo "    fix*        run jmm tool fix on packages"
+	echo "    fmt*        run jmmfmt on package sources"
+	echo "    generate*   generate Jmm files by processing source"
+	echo "    get         download and install packages and dependencies (currently works with github.com only)"
+	echo "    here        set $JMMPATH to the given directory"
+	echo "    install*    compile and install packages and dependencies"
+	echo "    list*       list packages"
+	echo "    run         compile and run Jmm program (the first file must have the main method)"
+	echo "    test*       test packages"
+	echo "    tool*       run specified jmm tool"
+	echo "    version     print Jmm version"
+	echo "    vet*        run jmm tool vet on packages"
+	echo
+	echo "    * not implemented"
+	echo
 }
 
 jmv_here() {
 	local wPath
-    if [ -z $1 ]; then
-        wPath=$(jmm_helper_find_src $PWD)
-        wPath=${wPath%/*}
-    else
-        wPath="`jmm_helper_resolve \"$2\"`"
-    fi
-    if [ -z $wPath ]; then
-        echo
-        echo "This command must be run in a Jmm workspace"
-        echo
-        return 0
-    fi
-    mkdir -p $wPath/bin
-    mkdir -p $wPath/pkg
-    mkdir -p $wPath/src
-    export JMMPATH=$wPath
-    export PATH=$PATH:$JMMPATH/bin
-    jmm_env
+	if [ -z $1 ]; then
+		wPath=$(jmm_helper_find_src $PWD)
+		wPath=${wPath%/*}
+	else
+		wPath="`jmm_helper_resolve \"$2\"`"
+	fi
+	if [ -z $wPath ]; then
+		echo
+		echo "This command must be run in a Jmm workspace"
+		echo
+		return 0
+	fi
+	mkdir -p $wPath/bin
+	mkdir -p $wPath/pkg
+	mkdir -p $wPath/src
+	export JMMPATH=$wPath
+	export PATH=$PATH:$JMMPATH/bin
+	jmm_env
 }
 
 jmm_run() {
@@ -163,33 +195,10 @@ jmm_version() {
 jmm() {
 	case $1 in
 	"help" )
-		echo "Jmm is a tool for managing Java-- source code."
-		echo
-		echo "Java--"
-		echo
-		echo "Usage:"
-		echo
-		echo "    jmm command [arguments]"
-		echo
-		echo "The commands are:"
-		echo
-		echo "    build       compile packages and dependencies"
-		echo "    clean       remove object files"
-		echo "    doc         show documentation for package or symbol"
-		echo "    env         print Jmm environment information"
-		echo "    fix         run jmm tool fix on packages"
-		echo "    fmt         run jmmfmt on package sources"
-		echo "    generate    generate Jmm files by processing source"
-		echo "    get         download and install packages and dependencies (currently works with github.com only)"
-		echo "    here        set $JMMPATH to the given directory"
-		echo "    install     compile and install packages and dependencies"
-		echo "    list        list packages"
-		echo "    run         compile and run Jmm program (the first file must have the main method)"
-		echo "    test        test packages"
-		echo "    tool        run specified jmm tool"
-		echo "    version     print Jmm version"
-		echo "    vet         run jmm tool vet on packages"
-		echo
+		jmm_help
+	;;
+	"" )
+		jmm_help
 	;;
 	"build" )
 		jmm_build $2
@@ -239,5 +248,8 @@ jmm() {
 	"vet" )
 		echo "TODO"
 	;;
+	*)
+		echo "jmm: unknown command \"$1\""
+		echo "Run 'go help' for usage."
 	esac
 }
