@@ -15,9 +15,8 @@ jmm_helper_path_resolve() {
 }
 
 jmm_helper_get_dir_name() {
-	base=${1##*/}
-	class=${base%.*}
-	echo $class
+	base=$(dirname $1)
+	echo ${base##*/}
 }
 
 jmm_helper_get_class_path() {
