@@ -249,7 +249,7 @@ jmm() {
 		echo "TODO"
 	;;
 	*)
-		echo "jmm: unknown command \"$1\""
+		echo "jmm: unknown subcommand \"$1\""
 		echo "Run 'go help' for usage."
 	esac
 }
