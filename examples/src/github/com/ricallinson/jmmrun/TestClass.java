@@ -1,4 +1,4 @@
-package github.com.ricallinson.jmmtest;
+package github.com.ricallinson.jmmrun;
 
 class TestClass {  
    	public static void main(String args[]) {

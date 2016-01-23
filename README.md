@@ -20,8 +20,8 @@ I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to ha
 
 ### jmm run
 
-	jmm run ./examples/src/github/com/ricallinson/jmmrun/TestClass.java ./examples/src/github/com/ricallinson/jmmrun/OtherClass.java
+	jmm run ./src/github/com/ricallinson/jmmrun/TestClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
 
 ### jmm build
 
-	jmm build ./examples/src/github/com/ricallinson/jmmbuild
+	jmm build ./src/github/com/ricallinson/jmmbuild
