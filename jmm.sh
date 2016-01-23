@@ -15,11 +15,16 @@ jmm_helper_path_resolve() {
 }
 
 jmm_helper_get_dir_name() {
+	local base
 	base=$(dirname $1)
 	echo ${base##*/}
 }
 
 jmm_helper_get_class_path() {
+	local absPath
+	local jmmSize
+	local absSize
+	local absPath
 	absPath=$(jmm_helper_path_resolve $1)
 	jmmSize=${#JMMPATH}+5 # remove /src/
 	absSize=${#absPath}
@@ -50,6 +55,10 @@ jmm_helper_resolve() {
 }
 
 jmm_helper_build_jar() {
+	local jarName
+	local classPath
+	local classFiles
+	local classPaths
 	mkdir -p $JMMPATH/bin
 	mkdir -p $JMMPATH/pkg
 	jarName=$(jmm_helper_get_dir_name $1)
@@ -63,21 +72,24 @@ jmm_helper_build_jar() {
 	done
 	javac -d $JMMPATH/pkg $classFiles
 	jar cfe $JMMPATH/bin/$jarName.jar $classPath $classPaths
+	echo $JMMPATH/bin/$jarName.jar
 }
 
 jmm_helper_resolve_imports() {
+	local files
 	files=""
 	for import in $(grep ^import $1); do
 		if [ "$import" != "import" ] && [ -n $import ]; then
 			import=${import//[\.]/\/}
 			import=$(dirname $import)
-			files="$files $(jmm_helper_find_java_files ./src/$import)"
+			files="$files $(jmm_helper_find_java_files $JMMPATH/src/$import)"
 		fi
 	done
 	echo $files
 }
 
 jmm_helper_find_java_files() {
+	local files
 	files=""
 	for file in $(find $1 -name '*.java'); do
 		files="$files $file $(jmm_helper_resolve_imports $file)"
@@ -88,10 +100,12 @@ jmm_helper_find_java_files() {
 # Commands.
 
 jmm_build() {
+	local main
+	local files
 	main=""
 	files=""
 	for file in $(find $1 -name '*.java'); do
-		if [ -z $main ] && grep -q "public static void main(" "$file"; then
+		if [ "$main" = "" ] && grep -q "public static void main(" "$file"; then
 			main="$file $(jmm_helper_resolve_imports $file)"
 		else
 			files="$files $file $(jmm_helper_resolve_imports $file)"
@@ -110,7 +124,10 @@ jmm_env() {
 }
 
 jmm_get() { # currently only works with github zip files
+	local packageDir
+	local packageName
 	for package; do
+		# need to filter out none github imports
 		$(curl -s -O -L $package/archive/master.zip)
 		if grep -q "error" "$JMMPATH/master.zip"; then
 			rm $JMMPATH/master.zip
@@ -183,9 +200,9 @@ jmv_here() {
 }
 
 jmm_run() {
-	jmm_helper_build_jar "$@"
-	jarName=$(jmm_helper_get_dir_name $1)
-	java -jar $JMMPATH/bin/$jarName.jar
+	local jarFile
+	jarFile=$(jmm_helper_build_jar "$@")
+	java -jar $jarFile
 }
 
 jmm_version() {
