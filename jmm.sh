@@ -16,7 +16,7 @@ jmm_helper_path_resolve() {
 
 jmm_helper_get_class_path() {
 	absPath=$(jmm_helper_path_resolve $1)
-	jmmSize=${#JMMPATH}
+	jmmSize=${#JMMPATH}+5 # remove /src/
 	absSize=${#absPath}
 	absPath=${absPath:0:absSize-5} # remove .class
 	echo ${absPath:$jmmSize}
@@ -45,14 +45,6 @@ jmm_helper_resolve() {
 }
 
 # Commands.
-
-# jmm_run() {
-# 	@javac -d . ./Test.java
-# 	@jar cf ./test.jar ./github/com/ricallinson/test/Test.class
-# 	@java -cp ./test.jar github.com.ricallinson.test.Test
-# 	@rm -rf ./github
-# 	@rm test.jar
-# }
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
@@ -84,12 +76,11 @@ jmm_run() {
 	runFile=$1
 	runDir=${runFile%/*}
 	curDir=$(pwd)
-	# echo $runDir
-	# javac -d $runFile
-	echo "$(jmm_helper_get_class_path $runFile)"
-	# jar cf ./test.jar ./github/com/ricallinson/test/Test.class
-	# java -cp ./test.jar github.com.ricallinson.test.Test
-	# echo $curDir
+	classPath=$(jmm_helper_get_class_path $runFile)
+	classDir="$JMMPATH/src/$classPath"
+	javac -d ./ $runFile
+	jar cf ./test.jar ./$classPath.class
+	java -cp ./test.jar $classPath
 }
 
 jmm_version() {
