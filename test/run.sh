@@ -1,7 +1,10 @@
 #!/bin/bash
+
 cd "$(dirname "$0")"
+export JMMPATH=$(dirname $(pwd))/examples
 echo "JMMPATH is set to $JMMPATH"
 source ../jmm.sh
+
 for test in ./functional/*.sh; do
 	jmm clean
 	$test

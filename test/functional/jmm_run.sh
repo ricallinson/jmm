@@ -4,4 +4,5 @@ data=$(jmm run $JMMPATH/src/github/com/ricallinson/jmmrun/TestClass.java $JMMPAT
 if [ "$data" = "Hello world." ]; then
 	exit 0
 fi
+echo "Jar did not output 'Hello world'."
 exit 1

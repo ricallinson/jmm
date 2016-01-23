@@ -128,7 +128,7 @@ jmm_get() { # currently only works with github zip files
 	local packageName
 	for package; do
 		# need to filter out none github imports
-		$(curl -s -O -L $package/archive/master.zip)
+		$(curl -s -o $JMMPATH/master.zip -L $package/archive/master.zip)
 		if grep -q "error" "$JMMPATH/master.zip"; then
 			rm $JMMPATH/master.zip
 			echo "Package '$package' not found"
