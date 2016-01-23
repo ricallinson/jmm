@@ -14,7 +14,7 @@ jmm_helper_path_resolve() {
     fi
 }
 
-jmm_helper_get_class_name() {
+jmm_helper_get_dir_name() {
 	base=${1##*/}
 	class=${base%.*}
 	echo $class
@@ -51,7 +51,9 @@ jmm_helper_resolve() {
 }
 
 jmm_helper_build_jar() {
-	className=$(jmm_helper_get_class_name $1) # first file has the main method
+	mkdir -p $JMMPATH/bin
+	mkdir -p $JMMPATH/pkg
+	jarName=$(jmm_helper_get_dir_name $1)
 	classFiles=""
 	classPaths=""
 	for file; do
@@ -59,13 +61,18 @@ jmm_helper_build_jar() {
 		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
 	done
 	javac -d $JMMPATH/pkg $classFiles
-	jar cf $JMMPATH/bin/$className.jar $classPaths
+	jar cf $JMMPATH/bin/$jarName.jar $classPaths
 }
 
 # Commands.
 
 jmm_build() {
 	echo "todo"
+}
+
+jmm_clean() {
+	rm -rf $JMMPATH/bin/*
+	rm -rf $JMMPATH/pkg/*
 }
 
 jmm_env() {
@@ -98,8 +105,8 @@ jmm_run() {
 	jmm_helper_build_jar "$@"
 	classPath=$(jmm_helper_get_class_path $1)
 	classPath=${classPath//[\/]/\.}
-	className=$(jmm_helper_get_class_name $1)
-	java -cp $JMMPATH/bin/$className.jar $classPath
+	jarName=$(jmm_helper_get_dir_name $1)
+	java -cp $JMMPATH/bin/$jarName.jar $classPath
 }
 
 jmm_version() {
@@ -141,7 +148,7 @@ jmm() {
 		jmm_build
 	;;
 	"clean" )
-		echo "TODO"
+		jmm_clean
 	;;
 	"doc" )
 		echo "TODO"

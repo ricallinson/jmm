@@ -16,12 +16,44 @@ To activate jmm, you need to source it from your shell:
 
 I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to have it automatically sourced upon login.
 
-## Examples
-
-### jmm run
-
-	jmm run ./src/github/com/ricallinson/jmmrun/TestClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
+## Usage
 
 ### jmm build
 
+Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `bin` directory.
+
 	jmm build ./src/github/com/ricallinson/jmmbuild
+
+### jmm clean
+
+Removes all files in the `bin` and `pkg` directories.
+
+	jmm clean
+
+### jmm env
+
+Prints the values of all Java-- environment variables.
+
+	jmm env
+
+### jmm here
+
+Creates a new Java-- workspace at the given path and exports the JMMPATH to that location.
+
+	jmm here ./some/dir
+
+Determine if the current directory part of a Java-- workspace. If it is export the JMMPATH as that workspace.
+
+	jmm here
+
+### jmm run
+
+Provide a one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `bin` directory.
+
+	jmm run ./src/github/com/ricallinson/jmmrun/TestClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
+
+### jmm version
+
+Prints the version of jmm in use.
+
+	jmm version
