@@ -109,18 +109,22 @@ jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
 }
 
-jmm_get() { # currently only works with github
-    for module; do
-        $(curl -s -O -L $module/archive/master.zip)
-        # handle not found case
-        moduleDir=${module//[\.]/\/}
-        rm -rf $JMMPATH/src/$moduleDir
-        unzip -qq ./master.zip -d $JMMPATH/src/$moduleDir
-        moduleName=$(basename $module)
-        mv $JMMPATH/src/$moduleDir/$moduleName-master/* $JMMPATH/src/$moduleDir/$moduleName-master/..
-        mv $JMMPATH/src/$moduleDir/$moduleName-master/.[^.]* $JMMPATH/src/$moduleDir/$moduleName-master/..
-        rm -r $JMMPATH/src/$moduleDir/$moduleName-master
-        rm ./master.zip
+jmm_get() { # currently only works with github zip files
+    for package; do
+        $(curl -s -O -L $package/archive/master.zip)
+        if grep -q "error" "$JMMPATH/master.zip"; then
+            rm $JMMPATH/master.zip
+            echo "Package '$package' not found"
+            return 1
+        fi
+        packageDir=${package//[\.]/\/}
+        rm -rf $JMMPATH/src/$packageDir
+        unzip -qq $JMMPATH/master.zip -d $JMMPATH/src/$packageDir
+        packageName=$(basename $package)
+        mv $JMMPATH/src/$packageDir/$packageName-master/* $JMMPATH/src/$packageDir/$packageName-master/..
+        mv $JMMPATH/src/$packageDir/$packageName-master/.[^.]* $JMMPATH/src/$packageDir/$packageName-master/..
+        rm -r $JMMPATH/src/$packageDir/$packageName-master
+        rm $JMMPATH/master.zip
     done
 }
 

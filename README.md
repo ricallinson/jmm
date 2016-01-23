@@ -36,6 +36,12 @@ Prints the values of all Java-- environment variables.
 
 	jmm env
 
+### jmm get
+
+Get a package from [github.com](https://github.com/) and copy its source into the current workspace.
+
+	jmm get github.com/ricallinson/jmmimporttest
+
 ### jmm here
 
 Creates a new Java-- workspace at the given path and exports the JMMPATH as that directory.
