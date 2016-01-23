@@ -80,7 +80,8 @@ jmv_here() {
 
 jmm_run() {
 	classPath=$(jmm_helper_get_class_path $1)
-	className=$(jmm_helper_get_class_name $classPath)
+	classPath=${classPath//[\/]/\.}
+	className=$(jmm_helper_get_class_name $1)
 	classFiles=""
 	classPaths=""
 	for file; do
@@ -88,7 +89,7 @@ jmm_run() {
 		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
 	done
 	javac -d $JMMPATH/pkg $classFiles
-	jar cf $JMMPATH/bin/$className.jar $classPaths
+	jar cefM $JMMPATH/bin/$className.jar $classPath $classPaths
 	java -cp $JMMPATH/bin/$className.jar $classPath
 }
 
