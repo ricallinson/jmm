@@ -73,13 +73,15 @@ jmv_here() {
 }
 
 jmm_run() {
-	runFile=$1
-	runDir=${runFile%/*}
-	curDir=$(pwd)
-	classPath=$(jmm_helper_get_class_path $runFile)
-	classDir="$JMMPATH/src/$classPath"
-	javac -d ./ $runFile
-	jar cf $JMMPATH/pkg/test.jar ./$classPath.class
+	classPath=$(jmm_helper_get_class_path $1)
+	classFiles=""
+	classPaths=""
+	for file; do
+		classFiles="$classFiles $file"
+		classPaths="$classPaths ./$(jmm_helper_get_class_path $file).class"
+	done
+	javac -d ./ $classFiles
+	jar cf $JMMPATH/pkg/test.jar $classPaths
 	java -cp $JMMPATH/pkg/test.jar $classPath
 }
 
@@ -152,7 +154,7 @@ jmm() {
 		echo "TODO"
 	;;
 	"run" )
-		jmm_run $2
+		jmm_run "${@:2}"
 	;;
 	"test" )
 		echo "TODO"
