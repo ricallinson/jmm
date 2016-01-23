@@ -50,7 +50,23 @@ jmm_helper_resolve() {
     echo "`pwd -P`" # output full, link-resolved path
 }
 
+jmm_helper_build_jar() {
+	className=$(jmm_helper_get_class_name $1) # first file has the main method
+	classFiles=""
+	classPaths=""
+	for file; do
+		classFiles="$classFiles $file"
+		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
+	done
+	javac -d $JMMPATH/pkg $classFiles
+	jar cf $JMMPATH/bin/$className.jar $classPaths
+}
+
 # Commands.
+
+jmm_build() {
+	echo "todo"
+}
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
@@ -79,17 +95,10 @@ jmv_here() {
 }
 
 jmm_run() {
+	jmm_helper_build_jar "$@"
 	classPath=$(jmm_helper_get_class_path $1)
 	classPath=${classPath//[\/]/\.}
 	className=$(jmm_helper_get_class_name $1)
-	classFiles=""
-	classPaths=""
-	for file; do
-		classFiles="$classFiles $file"
-		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
-	done
-	javac -d $JMMPATH/pkg $classFiles
-	jar cefM $JMMPATH/bin/$className.jar $classPath $classPaths
 	java -cp $JMMPATH/bin/$className.jar $classPath
 }
 
@@ -129,7 +138,7 @@ jmm() {
 		echo
 	;;
 	"build" )
-		echo "TODO"
+		jmm_build
 	;;
 	"clean" )
 		echo "TODO"
