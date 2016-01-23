@@ -14,6 +14,12 @@ jmm_helper_path_resolve() {
     fi
 }
 
+jmm_helper_get_class_name() {
+	base=${1##*/}
+	class=${base%.*}
+	echo $class
+}
+
 jmm_helper_get_class_path() {
 	absPath=$(jmm_helper_path_resolve $1)
 	jmmSize=${#JMMPATH}+5 # remove /src/
@@ -74,6 +80,7 @@ jmv_here() {
 
 jmm_run() {
 	classPath=$(jmm_helper_get_class_path $1)
+	className=$(jmm_helper_get_class_name $classPath)
 	classFiles=""
 	classPaths=""
 	for file; do
@@ -81,8 +88,8 @@ jmm_run() {
 		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
 	done
 	javac -d $JMMPATH/pkg $classFiles
-	jar cf $JMMPATH/bin/test.jar $classPaths
-	java -cp $JMMPATH/bin/test.jar $classPath
+	jar cf $JMMPATH/bin/$className.jar $classPaths
+	java -cp $JMMPATH/bin/$className.jar $classPath
 }
 
 jmm_version() {
@@ -113,7 +120,7 @@ jmm() {
 		echo "    here        set $JMMPATH to the given directory"
 		echo "    install     compile and install packages and dependencies"
 		echo "    list        list packages"
-		echo "    run         compile and run Jmm program"
+		echo "    run         compile and run Jmm program (the first file must have the main method)"
 		echo "    test        test packages"
 		echo "    tool        run specified jmm tool"
 		echo "    version     print Jmm version"
