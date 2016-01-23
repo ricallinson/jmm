@@ -20,13 +20,13 @@ I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to ha
 
 ### jmm build
 
-Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `bin` directory. All imports are resolved to modules in the current workspace.
+Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. All imports are resolved to modules in the current workspace.
 
 	jmm build ./src/github/com/ricallinson/jmmbuild
 
 ### jmm clean
 
-Removes all files in the `bin` and `pkg` directories.
+Removes all files in the `$JMMPATH/bin` and `$JMMPATH/pkg` directories.
 
 	jmm clean
 
@@ -44,17 +44,17 @@ Get a package from [github.com](https://github.com/) and copy its source into th
 
 ### jmm here
 
-Creates a new Java-- workspace at the given path and exports the JMMPATH as that directory.
+Creates a new Java-- workspace at the given path and exports the `$JMMPATH` as that directory.
 
 	jmm here ./some/dir
 
-Determine if the current directory is part of a Java-- workspace. If it is export the JMMPATH as that directory.
+Determine if the current directory is part of a Java-- workspace. If it is exports the `$JMMPATH` as that directory.
 
 	jmm here
 
 ### jmm run
 
-Provide a one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `bin` directory.
+Provide one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `$JMMPATH/bin` directory.
 
 	jmm run ./src/github/com/ricallinson/jmmrun/TestClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
 
