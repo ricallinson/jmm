@@ -59,23 +59,42 @@ jmm_helper_build_jar() {
 	classPaths=""
 	for file; do
 		classFiles="$classFiles $file"
-		classPaths="$classPaths -C $JMMPATH/pkg ./$(jmm_helper_get_class_path $file).class"
+		classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
 	done
 	javac -d $JMMPATH/pkg $classFiles
 	jar cfe $JMMPATH/bin/$jarName.jar $classPath $classPaths
 }
 
+jmm_helper_resolve_imports() {
+    files=""
+    for import in $(grep ^import $1); do
+        if [ "$import" != "import" ] && [ -n $import ]; then
+            import=${import//[\.]/\/}
+            import=$(dirname $import)
+            files="$files $(jmm_helper_find_java_files ./src/$import)"
+        fi
+    done
+    echo $files
+}
+
+jmm_helper_find_java_files() {
+    files=""
+    for file in $(find $1 -name '*.java'); do
+        files="$files $file $(jmm_helper_resolve_imports $file)"
+    done
+    echo $files
+}
+
 # Commands.
 
 jmm_build() {
-    # need to find all dependancies and add those files too
     main=""
     files=""
-    for file in $(find $1 -name '*.java' ); do
+    for file in $(find $1 -name '*.java'); do
         if [ -z $main ] && grep -q "public static void main(" "$file"; then
-            main="$file"
+            main="$file $(jmm_helper_resolve_imports $file)"
         else
-            files="$files $file"
+            files="$files $file $(jmm_helper_resolve_imports $file)"
         fi
     done
     jmm_helper_build_jar $main $files
