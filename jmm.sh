@@ -67,11 +67,10 @@ jmm_helper_build_jar() {
 
 jmm_build() {
     # need to find all dependancies and add those files too
-    # need to find the file that has the main method and make that first in the list
     main=""
     files=""
     for file in $(find $1 -name '*.java' ); do
-        if [ -z $main ] && grep -q main "$file"; then
+        if [ -z $main ] && grep -q "public static void main(" "$file"; then
             main="$file"
         else
             files="$files $file"
