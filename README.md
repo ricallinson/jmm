@@ -24,11 +24,11 @@ Java-- follows the same development patten as [Go](https://golang.org/). There a
 	pkg
 	src
 
-Raw `.java` files are placed under the `src` directory with a namespace based on their location in a source control system such as [Github](https://github.com/).
+Raw `.java` files are placed under the `src` directory with a package name derived from their location in a source control system such as [Github](https://github.com/).
 
-Compiled `.class` files are generated under the `pkg` directory within directories based on their namespace.
+Compiled `.class` files are generated under the `pkg` directory.
 
-Final `.jar` files are put in the `bin` directory along with an executable script.
+Self contained `.jar` files are put in the `bin` directory along with an executable script to run them.
 
 ### Getting Started Example
 
