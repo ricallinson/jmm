@@ -102,6 +102,7 @@ jmm_helper_find_java_files() {
 jmm_build() {
 	local main
 	local files
+	local jar
 	main=""
 	files=""
 	for file in $(find $1 -name '*.java'); do
@@ -111,7 +112,8 @@ jmm_build() {
 			files="$files $file $(jmm_helper_resolve_imports $file)"
 		fi
 	done
-	jmm_helper_build_jar $main $files
+	jar=$(jmm_helper_build_jar $main $files)
+	echo $jar
 }
 
 jmm_clean() {
@@ -235,7 +237,6 @@ jmm() {
 	;;
 	"here" )
 		jmv_here $2
-	;;
 	;;
 	"list" )
 		echo "TODO"
