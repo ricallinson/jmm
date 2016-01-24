@@ -79,7 +79,7 @@ Determines if the current directory is part of a Java-- workspace. If it is the 
 
 ### jmm lint
 
-Checks the give packages or files against the Java-- opinionated style. Note: The opinionated style is not complete.
+Checks the given packages or files against the Java-- opinionated style. Note: The opinionated style is not complete.
 
 	jmm lint ./src/github/com/ricallinson/jmmbuild
 
