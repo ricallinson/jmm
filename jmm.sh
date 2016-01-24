@@ -12,6 +12,7 @@ LEGAL_PACKAGES=(                # https://docs.oracle.com/javase/8/docs/api/over
 	"java.io.PrintWriter"       # https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
 	"java.net.ServerSocket"     # https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html
 	"java.net.Socket"           # https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html
+	"java.time"                 # https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
 )
 
 #

@@ -6,6 +6,7 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.time.*;
 
 public class HttpServer {
 
@@ -22,7 +23,16 @@ public class HttpServer {
                         line = input.readLine();
                     }
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
-                    out.println("Hello");
+                    String time = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
+                    out.println("HTTP/1.1 200 OK");
+                    out.println("Date: " + time);
+                    out.println("Server: JmmHttpServerExample");
+                    out.println("Last-Modified: " + time);
+                    out.println("Content-Length: 21");
+                    out.println("Content-Type: text/html");
+                    out.println("Connection: Closed");
+                    out.println("");
+                    out.println("<h1>Hello world.</h1>");
                 } finally {
                     socket.close();
                 }
