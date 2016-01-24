@@ -3,6 +3,7 @@
 # Set the JMMPATH and current the directory.
 cd "$(dirname "$0")"
 export JMMPATH=$(dirname $(pwd))/examples
+export PATH=$PATH:$JMMPATH/bin
 source ../jmm.sh
 
 echo
