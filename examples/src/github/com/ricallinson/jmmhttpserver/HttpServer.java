@@ -24,15 +24,16 @@ public class HttpServer {
                     }
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                     String time = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
+                    String body = "<h1>Hello world</h1>";
                     out.println("HTTP/1.1 200 OK");
                     out.println("Date: " + time);
                     out.println("Server: JmmHttpServerExample");
                     out.println("Last-Modified: " + time);
-                    out.println("Content-Length: 21");
+                    out.println("Content-Length: " + Integer.toString(body.length()));
                     out.println("Content-Type: text/html");
                     out.println("Connection: Closed");
                     out.println("");
-                    out.println("<h1>Hello world.</h1>");
+                    out.println(body);
                 } finally {
                     socket.close();
                 }
