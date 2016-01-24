@@ -1,13 +1,9 @@
 #!/bin/bash
 source ../jmm.sh
-jar=$(jmm build $JMMPATH/src/github/com/ricallinson/jmmbuild)
-if [ -e "$jar" ]; then
-	jmm clean
-	if [ -e "$jar" ]; then
-		echo "Jar '$jar' did not get removed."
-		exit 1
-	fi
-	exit 0
+jmm build $JMMPATH/src/github/com/ricallinson/jmmbuild
+jmm clean
+if [ -e "$JMMPATH/bin/jmmbuild" ]; then
+	echo "Jar 'jmmbuild.jar' did not get removed."
+	exit 1
 fi
-echo "File '$jar' not created."
-exit 1
+exit 0

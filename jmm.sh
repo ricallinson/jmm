@@ -181,7 +181,6 @@ jmm_build() {
 	exe=${jar:0:${#jar}-4}
 	echo "java -jar $jar" > $exe
 	chmod +x $exe
-	echo $jar
 }
 
 jmm_clean() {
@@ -207,6 +206,7 @@ jmm_get() { # currently only works with github zip files
 		fi
 		packageDir=${package//[\.]/\/}
 		rm -rf $JMMPATH/src/$packageDir
+		mkdir -p $JMMPATH/src/$packageDir
 		unzip -qq $JMMPATH/master.zip -d $JMMPATH/src/$packageDir
 		packageName=$(basename $package)
 		mv $JMMPATH/src/$packageDir/$packageName-master/* $JMMPATH/src/$packageDir/$packageName-master/..
@@ -262,7 +262,10 @@ jmv_here() {
 	mkdir -p $wPath/src
 	export JMMPATH=$wPath
 	export PATH=$PATH:$JMMPATH/bin
-	jmm_env
+
+	echo
+	echo "Java-- workspace set to: $JMMPATH"
+	echo
 }
 
 jmm_run() {

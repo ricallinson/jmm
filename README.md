@@ -4,23 +4,17 @@
 
 A joke created after having coffee with a fellow engineer. Java-- is taking Java in a different direction by using highly opinionated choices as to what should or should not be used from the language. Java-- is not a new language, it's just a collection of tools that let you work with Java in a different way.
 
-## Manual Install
+## Install
 
-For manual install create a folder somewhere in your filesystem with the jmm.sh file inside it. I put mine in a folder called `~/.jmm`.
-
-Or if you have git installed, then just clone it:
+Using git, clone this repository into a directory named `~/.jmm`.
 
     git clone git@github.com:ricallinson/jmm.git ~/.jmm
 
 To activate jmm, you need to source it from your shell:
 
-    source ~/.gwm/gwm.sh
+    source ~/.jmm/jmm.sh
 
 I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to have it automatically sourced upon login.
-
-## Run Tests
-
-	./test/run.sh
 
 ## Usage
 
@@ -30,11 +24,24 @@ Java-- follows the same development patten as [Go](https://golang.org/). There a
 	pkg
 	src
 
-Raw `.java` files are placed under the `src` directory with a namespace based on there location in a source control system such as [Github](https://github.com/).
+Raw `.java` files are placed under the `src` directory with a namespace based on their location in a source control system such as [Github](https://github.com/).
 
-Compiled `.class` files are generated under the `pkg` directory.
+Compiled `.class` files are generated under the `pkg` directory within directories based on their namespace.
 
 Final `.jar` files are put in the `bin` directory along with an executable script.
+
+### Getting Started Example
+
+This example creates a Java-- workspace, gets the source code for a module, builds a `.jar` and then executes it.
+
+	mkdir ./jmmtest
+	cd ./jmmtest
+	jmm here .
+	jmm get github.com/ricallinson/jmmexample
+	jmm build ./src/github/com/ricallinson/jmmexample
+	jmmexample
+
+## Help
 
 ### jmm build
 
@@ -93,3 +100,9 @@ This is the complete list of "legal" Java-- packages allowed from the [Java 8](h
 * [java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
 * [java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
 * [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
+
+## Run Tests
+
+Tests to validate everything is working as expected.
+
+	./test/run.sh
