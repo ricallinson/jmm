@@ -73,13 +73,13 @@ Creates a new Java-- workspace at the given path and exports the `$JMMPATH` as t
 
 	jmm here ./some/dir
 
-Determine if the current directory is part of a Java-- workspace. If it is exports the `$JMMPATH` as that directory.
+Determines if the current directory is part of a Java-- workspace. If it is the `$JMMPATH` is changed to that workspace.
 
 	jmm here
 
 ### jmm run
 
-Provide one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `$JMMPATH/bin` directory.
+Provide one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `$JMMPATH/bin` directory. Note: this will overwrite an existing `.jar` if it has the same name.
 
 	jmm run ./src/github/com/ricallinson/jmmrun/TestClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
 
