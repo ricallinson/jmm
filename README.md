@@ -24,11 +24,17 @@ I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to ha
 
 ## Usage
 
-Java-- follows the same development patten as [Go](https://golang.org/).
+Java-- follows the same development patten as [Go](https://golang.org/). There are no externally linked libraries and all the source code for a program is contained in a Java-- workspace. A workspace is a directory that contains a projects code. Generally you'll have one workspace per project which contains the following directories.
 
 	bin
 	pkg
 	src
+
+Raw `.java` files are placed under the `src` directory with a namespace based on there location in a source control system such as [Github](https://github.com/).
+
+Compiled `.class` files are generated under the `pkg` directory.
+
+Final `.jar` files are put in the `bin` directory along with an executable script.
 
 ### jmm build
 
