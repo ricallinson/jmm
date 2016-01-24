@@ -161,7 +161,6 @@ jmm_help() {
 	echo "    doc*        show documentation for package or symbol"
 	echo "    env         print Jmm environment information"
 	echo "    fmt*        run jmmfmt on package sources"
-	echo "    generate*   generate Jmm files by processing source"
 	echo "    get         download and install packages and dependencies (currently works with github.com only)"
 	echo "    here        set $JMMPATH to the given directory"
 	echo "    list*       list packages"
