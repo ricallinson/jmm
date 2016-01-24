@@ -6,11 +6,11 @@ jmm_helper_path_resolve() {
 	if [ ${1:0:1} = "." ]; then # if starts with a .
 		echo $(pwd)${1:1}
 	elif [ ${1:0:1} = "~" ]; then # if starts with a ~
-		echo  $(pwd)${1:1}
+		echo  $HOME${1:1}
 	elif [ ${1:0:1} = "/" ]; then # if starts with a /
 		echo  $1
 	else
-		echo $(pwd)$1
+		echo $(pwd)/$1
 	fi
 }
 
@@ -180,10 +180,10 @@ jmm_help() {
 jmv_here() {
 	local wPath
 	if [ -z $1 ]; then
-		wPath=$(jmm_helper_find_src $PWD)
+		wPath=$(jmm_helper_find_src $(pwd))
 		wPath=${wPath%/*}
 	else
-		wPath="`jmm_helper_resolve \"$2\"`"
+		wPath=$(jmm_helper_resolve $1)
 	fi
 	if [ -z $wPath ]; then
 		echo

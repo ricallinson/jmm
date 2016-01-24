@@ -1,19 +1,23 @@
 #!/bin/bash
+
+# Set the JMMPATH and current the directory.
 cd "$(dirname "$0")"
 export JMMPATH=$(dirname $(pwd))/examples
+source ../jmm.sh
 
 echo
 echo "Running Tests"
 echo
 echo "JMMPATH is set to $JMMPATH"
-source ../jmm.sh
 echo
 
 failures=0
 passes=0
 
-for test in ./functional/*.sh; do
+for test in ./unit/*.sh ./functional/*.sh; do
+	# Clean up anything that may have been left by old tests.
 	jmm clean
+	# Run the test.
 	$test
 	if [ $? -eq 0 ]; then
 		passes=$(($passes+1))
@@ -22,7 +26,6 @@ for test in ./functional/*.sh; do
 		failures=$(($failures+1))
 	    echo "    Fail $test"
 	fi
-	jmm clean
 done
 
 echo
