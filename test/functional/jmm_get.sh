@@ -5,8 +5,9 @@ if [ -d $packageDir ]; then
 	rm -rf $packageDir
 fi
 jmm get github.com/ricallinson/jmmimporttest
-if [ -d $packageDir ]; then
-	exit 0
+if [ ! -d $packageDir ]; then
+	echo "Package was not downloaded."
+	exit 1
 fi
-echo "Package was not downloaded."
+rm -rf $packageDir
 exit 1
