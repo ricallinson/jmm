@@ -1,4 +1,5 @@
-export JMM_VERSION="0.0.1"
+export JMMVERSION="0.0.1"
+export JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 #
 # Constants
@@ -190,6 +191,7 @@ jmm_clean() {
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
+	echo "JMMSCRIPT=\"$JMMSCRIPT\""
 	echo "JAVA_HOME=\"$JAVA_HOME\""
 }
 
@@ -231,7 +233,7 @@ jmm_help() {
 	echo "    clean       remove object files"
 	echo "    doc*        show documentation for package or symbol"
 	echo "    env         print Jmm environment information"
-	echo "    fmt*        run jmmfmt on package sources"
+	echo "    lint        run lint check on package sources"
 	echo "    get         download and install packages and dependencies (currently works with github.com only)"
 	echo "    here        set $JMMPATH to the given directory"
 	echo "    list*       list packages"
@@ -268,6 +270,14 @@ jmv_here() {
 	echo
 }
 
+jmm_lint() {
+	local files
+	for file in "$@"; do
+		files="$files $file"
+	done
+	java -jar $JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar -c $JMMHOME/lint.xml $files
+}
+
 jmm_run() {
 	local jarFile
 	jarFile=$(jmm_helper_build_jar "$@")
@@ -275,7 +285,7 @@ jmm_run() {
 }
 
 jmm_version() {
-	echo $JMM_VERSION
+	echo $JMMVERSION
 }
 
 #
@@ -302,9 +312,6 @@ jmm() {
 	"env" )
 		jmm_env
 	;;
-	"fmt" )
-		echo "TODO"
-	;;
 	"generate" )
 		echo "TODO"
 	;;
@@ -313,6 +320,9 @@ jmm() {
 	;;
 	"here" )
 		jmv_here $2
+	;;
+	"lint" )
+		jmm_lint "${@:2}"
 	;;
 	"list" )
 		echo "TODO"
