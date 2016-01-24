@@ -103,13 +103,15 @@ jmm_helper_find_java_files() {
 # Commands.
 
 jmm_build() {
+	local path
 	local main
 	local files
 	local jar
 	local exe
+	path=$(jmm_helper_path_resolve $1)
 	main=""
 	files=""
-	for file in $(find $1 -name '*.java'); do
+	for file in $(find $path -name '*.java'); do
 		if [ "$main" = "" ] && grep -q "public static void main(" "$file"; then
 			main="$file $(jmm_helper_resolve_imports $file)"
 		else
