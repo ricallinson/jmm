@@ -5,8 +5,9 @@ export JMM_VERSION="0.0.1"
 #
 
 ILLEGAL_PACKAGE="Illegal package"
-LEGAL_PACKAGES=(
-	"java."
+LEGAL_PACKAGES=(            # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
+	"java.net.ServerSocket" # https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html
+	"java.net.Socket"       # https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html
 )
 
 #
@@ -15,7 +16,7 @@ LEGAL_PACKAGES=(
 
 jmm_package_allowed() {
 	if [[ "$1" == "java."* ]]; then
-		for package in $LEGAL_PACKAGES; do
+		for package in ${LEGAL_PACKAGES[@]}; do
 			if [[ "$1" == "$package"* ]]; then
 				return
 			fi
