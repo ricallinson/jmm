@@ -10,24 +10,26 @@ source ../jmm.sh
 echo
 
 failures=0
-successes=0
+passes=0
 
 for test in ./functional/*.sh; do
 	jmm clean
 	$test
 	if [ $? -eq 0 ]; then
-		successes=successes+1
+		passes=$(($passes+1))
 	    echo "    Pass $test"
 	else
-		failures=failures+1
+		failures=$(($failures+1))
 	    echo "    Fail $test"
 	fi
 	jmm clean
 done
 
 echo
+echo "There were $passes passes and $failures failures."
+echo
 
-if [[ failures != 0 ]]; then
+if [[ $failures != 0 ]]; then
 	exit 1
 fi
 exit 0
