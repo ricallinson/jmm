@@ -26,7 +26,7 @@ I always add this line to my _~/.bashrc_, _~/.profile_, or _~/.zshrc_ file to ha
 
 ### jmm build
 
-Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. All imports are resolved to modules in the current workspace.
+Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. An executable to run the `.jar` is also created and placed in the `$JMMPATH/bin` directory. All imports are resolved to modules in the current workspace.
 
 	jmm build ./src/github/com/ricallinson/jmmbuild
 
