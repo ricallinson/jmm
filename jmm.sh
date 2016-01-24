@@ -82,7 +82,7 @@ jmm_helper_resolve_imports() {
 	local files
 	files=""
 	for import in $(grep ^import $1); do
-		if [ "$import" != "import" ] && [ -n $import ]; then
+		if [ "$import" != "import" ] && [ "${import:0:5}" != "java." ] && [ -n $import ]; then
 			import=${import//[\.]/\/}
 			import=$(dirname $import)
 			files="$files $(jmm_helper_find_java_files $JMMPATH/src/$import)"
@@ -108,7 +108,7 @@ jmm_build() {
 	local files
 	local jar
 	local exe
-	path=$(jmm_helper_path_resolve $1)
+	path=$(jmm_helper_path_resolve $1) # TODO: strip last / if it's there.
 	main=""
 	files=""
 	for file in $(find $path -name '*.java'); do
@@ -135,6 +135,7 @@ jmm_clean() {
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
+	echo "JAVA_HOME=\"$JAVA_HOME\""
 }
 
 jmm_get() { # currently only works with github zip files
