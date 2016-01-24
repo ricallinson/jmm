@@ -165,7 +165,6 @@ jmm_help() {
 	echo "    generate*   generate Jmm files by processing source"
 	echo "    get         download and install packages and dependencies (currently works with github.com only)"
 	echo "    here        set $JMMPATH to the given directory"
-	echo "    install*    compile and install packages and dependencies"
 	echo "    list*       list packages"
 	echo "    run         compile and run Jmm program (the first file must have the main method)"
 	echo "    test*       test packages"
@@ -244,8 +243,6 @@ jmm() {
 	"here" )
 		jmv_here $2
 	;;
-	"install" )
-		echo "TODO"
 	;;
 	"list" )
 		echo "TODO"
