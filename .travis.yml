@@ -1,3 +1,4 @@
+language: null
 script:
   - ./test/run.sh
 os:
