@@ -1,6 +1,27 @@
 export JMM_VERSION="0.0.1"
 
-# Helper functions.
+#
+# Constants
+#
+
+ILLEGAL_PACKAGE="Illegal package"
+LEGAL_PACKAGES=""
+
+#
+# Helper functions
+#
+
+jmm_package_allowed() {
+	if [[ "$1" == "java."* ]]; then
+		for package in $LEGAL_PACKAGES; do
+			if [[ "$1" == "$package"* ]]; then
+				echo "false"
+				return
+			fi
+		done
+	fi
+	return
+}
 
 jmm_helper_path_resolve() {
 	if [ ${1:0:1} = "." ]; then # if starts with a .
@@ -82,10 +103,20 @@ jmm_helper_resolve_imports() {
 	local files
 	files=""
 	for import in $(grep ^import $1); do
-		if [ "$import" != "import" ] && [ "${import:0:5}" != "java." ] && [ -n $import ]; then
-			import=${import//[\.]/\/}
-			import=$(dirname $import)
-			files="$files $(jmm_helper_find_java_files $JMMPATH/src/$import)"
+		if [ "$import" != "import" ] && [ -n $import ]; then
+			if [ "${import:0:4}" == "java" ] && [ "$(jmm_package_allowed $import)" == "false" ]; then
+				echo "$ILLEGAL_PACKAGE: $import"
+				return
+			elif [ "${import:0:4}" != "java" ]; then
+				import=${import//[\.]/\/}
+				import=$(dirname $import)
+				newFiles=$(jmm_helper_find_java_files $JMMPATH/src/$import)
+				if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
+					echo "$newFiles"
+					return
+				fi
+				files="$files $newFiles"
+			fi
 		fi
 	done
 	echo $files
@@ -95,16 +126,24 @@ jmm_helper_find_java_files() {
 	local files
 	files=""
 	for file in $(find $1 -name '*.java'); do
-		files="$files $file $(jmm_helper_resolve_imports $file)"
+		imports=$(jmm_helper_resolve_imports $file)
+		if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
+			echo "$imports"
+			return
+		fi
+		files="$files $file $imports"
 	done
 	echo $files
 }
 
-# Commands.
+#
+# Commands
+#
 
 jmm_build() {
 	local path
 	local main
+	local imports
 	local files
 	local jar
 	local exe
@@ -113,9 +152,19 @@ jmm_build() {
 	files=""
 	for file in $(find $path -name '*.java'); do
 		if [ "$main" = "" ] && grep -q "public static void main(" "$file"; then
-			main="$file $(jmm_helper_resolve_imports $file)"
+			imports=$(jmm_helper_resolve_imports $file)
+			if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
+				echo "$imports"
+				return
+			fi
+			main="$file $imports"
 		else
-			files="$files $file $(jmm_helper_resolve_imports $file)"
+			imports=$(jmm_helper_resolve_imports $file)
+			if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
+				echo "$imports"
+				return
+			fi
+			files="$files $file $imports"
 		fi
 	done
 	jar=$(jmm_helper_build_jar $main $files)
@@ -218,6 +267,10 @@ jmm_run() {
 jmm_version() {
 	echo $JMM_VERSION
 }
+
+#
+# Interface
+#
 
 jmm() {
 	case $1 in

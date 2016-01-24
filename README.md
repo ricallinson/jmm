@@ -69,3 +69,10 @@ Provide one or more `.java` files to run. The first file must have the main meth
 Prints the version of jmm in use.
 
 	jmm version
+
+## Alowed Packages
+
+This list is a subset of packages from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list.
+
+
+
