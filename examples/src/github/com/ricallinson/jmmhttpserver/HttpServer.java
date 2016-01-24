@@ -22,6 +22,7 @@ public class HttpServer {
                         System.out.println(line);
                         line = input.readLine();
                     }
+                    System.out.println("");
                     PrintWriter out = new PrintWriter(socket.getOutputStream(), true);
                     String time = java.time.format.DateTimeFormatter.RFC_1123_DATE_TIME.format(ZonedDateTime.now(ZoneId.of("GMT")));
                     String body = "<h1>Hello world</h1>";
