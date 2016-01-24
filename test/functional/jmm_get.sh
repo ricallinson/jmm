@@ -10,4 +10,4 @@ if [ ! -d $packageDir ]; then
 	exit 1
 fi
 rm -rf $packageDir
-exit 1
+exit 0
