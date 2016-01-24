@@ -103,6 +103,7 @@ jmm_build() {
 	local main
 	local files
 	local jar
+	local exe
 	main=""
 	files=""
 	for file in $(find $1 -name '*.java'); do
@@ -113,6 +114,9 @@ jmm_build() {
 		fi
 	done
 	jar=$(jmm_helper_build_jar $main $files)
+	exe=${jar:0:${#jar}-4}
+	echo "java -jar $jar" > $exe
+	chmod +x $exe
 	echo $jar
 }
 
