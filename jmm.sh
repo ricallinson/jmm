@@ -160,7 +160,6 @@ jmm_help() {
 	echo "    clean       remove object files"
 	echo "    doc*        show documentation for package or symbol"
 	echo "    env         print Jmm environment information"
-	echo "    fix*        run jmm tool fix on packages"
 	echo "    fmt*        run jmmfmt on package sources"
 	echo "    generate*   generate Jmm files by processing source"
 	echo "    get         download and install packages and dependencies (currently works with github.com only)"
@@ -168,9 +167,7 @@ jmm_help() {
 	echo "    list*       list packages"
 	echo "    run         compile and run Jmm program (the first file must have the main method)"
 	echo "    test*       test packages"
-	echo "    tool*       run specified jmm tool"
 	echo "    version     print Jmm version"
-	echo "    vet*        run jmm tool vet on packages"
 	echo
 	echo "    * not implemented"
 	echo
@@ -227,9 +224,6 @@ jmm() {
 	;;
 	"env" )
 		jmm_env
-	;;
-	"fix" )
-		echo "TODO"
 	;;
 	"fmt" )
 		echo "TODO"
