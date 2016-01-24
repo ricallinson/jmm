@@ -71,6 +71,9 @@ jmm_helper_build_jar() {
 		classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
 	done
 	javac -d $JMMPATH/pkg $classFiles
+	if [[ $? -eq 1 ]]; then
+		return
+	fi
 	jar cfe $JMMPATH/bin/$jarName.jar $classPath $classPaths
 	echo $JMMPATH/bin/$jarName.jar
 }
@@ -114,6 +117,9 @@ jmm_build() {
 		fi
 	done
 	jar=$(jmm_helper_build_jar $main $files)
+	if [[ "$jar" = "" ]]; then
+		return
+	fi
 	exe=${jar:0:${#jar}-4}
 	echo "java -jar $jar" > $exe
 	chmod +x $exe
