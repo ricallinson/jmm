@@ -74,10 +74,10 @@ Prints the version of jmm in use.
 
 This list is a subset of packages from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list.
 
-[java.io.BufferedReader](https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html)
-[java.io.InputStreamReader](https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html)
-[java.io.IOException](https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html)
-[java.io.PrintWriter](https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html)
-[java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
-[java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
-[java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
+* [java.io.BufferedReader](https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html)
+* [java.io.InputStreamReader](https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html)
+* [java.io.IOException](https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html)
+* [java.io.PrintWriter](https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html)
+* [java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
+* [java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
+* [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
