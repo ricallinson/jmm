@@ -5,7 +5,9 @@ export JMM_VERSION="0.0.1"
 #
 
 ILLEGAL_PACKAGE="Illegal package"
-LEGAL_PACKAGES=""
+LEGAL_PACKAGES=(
+	"java."
+)
 
 #
 # Helper functions
@@ -15,12 +17,11 @@ jmm_package_allowed() {
 	if [[ "$1" == "java."* ]]; then
 		for package in $LEGAL_PACKAGES; do
 			if [[ "$1" == "$package"* ]]; then
-				echo "false"
 				return
 			fi
 		done
 	fi
-	return
+	echo "false"
 }
 
 jmm_helper_path_resolve() {
