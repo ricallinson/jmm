@@ -5,9 +5,13 @@ export JMM_VERSION="0.0.1"
 #
 
 ILLEGAL_PACKAGE="Illegal package"
-LEGAL_PACKAGES=(            # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
-	"java.net.ServerSocket" # https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html
-	"java.net.Socket"       # https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html
+LEGAL_PACKAGES=(                # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
+	"java.io.BufferedReader"    # https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html
+	"java.io.InputStreamReader" # https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html
+	"java.io.IOException"       # https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html
+	"java.io.PrintWriter"       # https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
+	"java.net.ServerSocket"     # https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html
+	"java.net.Socket"           # https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html
 )
 
 #
