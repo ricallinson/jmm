@@ -70,9 +70,9 @@ Prints the version of jmm in use.
 
 	jmm version
 
-## Illegal Packages
+## Legal Packages
 
-This list is a subset of packages from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list.
+This is the complete list of "legal" Java-- packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list.
 
 * [java.io.BufferedReader](https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html)
 * [java.io.InputStreamReader](https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html)
