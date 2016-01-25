@@ -2,6 +2,6 @@
 .idea
 *.iml
 *.class
-*.jar
-target
+bin
+pkg
 jmmimporttest
