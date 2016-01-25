@@ -30,6 +30,7 @@ jmm_package_allowed() {
         done
     fi
     echo "false"
+    return 0
 }
 
 jmm_helper_path_resolve() {
@@ -42,12 +43,14 @@ jmm_helper_path_resolve() {
     else
         echo $(pwd)/$1
     fi
+    return 0
 }
 
 jmm_helper_get_dir_name() {
     local base
     base=$(dirname $1)
     echo ${base##*/}
+    return 0
 }
 
 jmm_helper_get_class_path() {
@@ -60,31 +63,35 @@ jmm_helper_get_class_path() {
     absSize=${#absPath}
     absPath=${absPath:0:absSize-5} # remove .class
     echo ${absPath:$jmmSize}
+    return 0
 }
 
 jmm_helper_find_up() {
-  local path
-  path=$1
-  while [ "$path" != "" ] && [ ! -d "$path/$2" ]; do
-    path=${path%/*}
-  done
-  echo "$path"
+    local path
+    path=$1
+    while [ "$path" != "" ] && [ ! -d "$path/$2" ]; do
+        path=${path%/*}
+    done
+    echo "$path"
+    return 0
 }
 
 jmm_helper_find_src() {
-  local dir
-  dir="$(jmm_helper_find_up $1 'src')"
-  if [ -e "$dir/src" ]; then
-    echo "$dir/src"
-  fi
+    local dir
+    dir="$(jmm_helper_find_up $1 'src')"
+    if [ -e "$dir/src" ]; then
+        echo "$dir/src"
+    fi
+    return 0
 }
 
 jmm_helper_resolve() {
     cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
     echo "`pwd -P`" # output full, link-resolved path
+    return 0
 }
 
-jmm_helper_install_jar() {
+jmm_helper_build_jar() {
     local jarName
     local classPath
     local classFiles
@@ -104,10 +111,11 @@ jmm_helper_install_jar() {
     done
     javac -d $JMMPATH/pkg $classFiles
     if [[ $? -eq 1 ]]; then
-        return
+        return 1
     fi
     jar cfe $JMMPATH/bin/$jarName.jar $classPath $classPaths
     echo $JMMPATH/bin/$jarName.jar
+    return 0
 }
 
 jmm_helper_resolve_imports() {
@@ -131,6 +139,7 @@ jmm_helper_resolve_imports() {
         fi
     done
     echo $files
+    return 0
 }
 
 jmm_helper_find_java_files() {
@@ -145,6 +154,7 @@ jmm_helper_find_java_files() {
         files="$files $file $imports"
     done
     echo $files
+    return 0
 }
 
 jmm_run_test() {
@@ -165,6 +175,7 @@ jmm_run_test() {
     else
         echo "pass"
     fi
+    return 0
 }
 
 #
@@ -182,6 +193,10 @@ jmm_install() {
     path="$1"
     if [[ -z "$path" ]]; then
         path="."
+    fi
+    jmm_lint $path
+    if [[ $? -gt 0 ]]; then
+        return 1
     fi
     path=$(jmm_helper_path_resolve "$path") # TODO: strip last / if it's there.
     main=""
@@ -203,24 +218,27 @@ jmm_install() {
             files="$files $file $imports"
         fi
     done
-    jar=$(jmm_helper_install_jar $main $files)
+    jar=$(jmm_helper_build_jar $main $files)
     if [[ "$jar" = "" ]]; then
         return
     fi
     exe=${jar:0:${#jar}-4}
     echo "java -jar $jar" > $exe
     chmod +x $exe
+    return 0
 }
 
 jmm_clean() {
     rm -rf $JMMPATH/bin/*
     rm -rf $JMMPATH/pkg/*
+    return 0
 }
 
 jmm_env() {
     echo "JMMPATH=\"$JMMPATH\""
     echo "JMMHOME=\"$JMMHOME\""
     echo "JAVA_HOME=\"$JAVA_HOME\""
+    return 0
 }
 
 jmm_get() { # currently only works with github zip files
@@ -244,6 +262,7 @@ jmm_get() { # currently only works with github zip files
         rm -r $JMMPATH/src/$packageDir/$packageName-master
         rm $JMMPATH/master.zip
     done
+    return 0
 }
 
 jmm_help() {
@@ -269,6 +288,7 @@ jmm_help() {
     echo "    test        test packages"
     echo "    version     print Jmm version"
     echo
+    return 0
 }
 
 jmv_here() {
@@ -294,6 +314,8 @@ jmv_here() {
     echo
     echo "Java-- workspace set to: $JMMPATH"
     echo
+
+    return 0
 }
 
 jmm_lint() {
@@ -301,7 +323,12 @@ jmm_lint() {
     for file in "$@"; do
         files="$files $file"
     done
-    java -jar $JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar -c $JMMHOME/lint.xml $files
+    result=$(java -jar $JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar -c $JMMHOME/lint.xml $files)
+    if [[ $? -gt 0 ]]; then
+        echo $result
+        return 1
+    fi
+    return 0
 }
 
 jmm_list() {
@@ -323,12 +350,18 @@ jmm_list() {
             done
         fi
     fi
+    return 0
 }
 
 jmm_run() {
     local jarFile
-    jarFile=$(jmm_helper_install_jar "$@")
+    jmm_lint $@
+    if [[ $? -gt 0 ]]; then
+        return 1
+    fi
+    jarFile=$(jmm_helper_build_jar "$@")
     java -jar $jarFile
+    return 0
 }
 
 jmm_test() {
@@ -345,6 +378,7 @@ jmm_test() {
             jmm_run_test $path
         fi
     done
+    return 0
 }
 
 jmm_version() {
@@ -359,19 +393,23 @@ jmm() {
     case $1 in
     "help" )
         jmm_help
-        return
+        return 0
     ;;
     "" )
         jmm_help
-        return
+        return 0
+    ;;
+    "here" )
+        jmv_here $2
+        return 0
     ;;
     "env" )
         jmm_env
-        return
+        return 0
     ;;
     "version" )
         jmm_version
-        return
+        return 0
     ;;
     esac
 
@@ -392,9 +430,6 @@ jmm() {
     "get" )
         jmm_get "${@:2}"
     ;;
-    "here" )
-        jmv_here $2
-    ;;
     "install" )
         jmm_install $2
     ;;
@@ -413,5 +448,7 @@ jmm() {
     *)
         echo "jmm: unknown subcommand \"$1\""
         echo "Run 'go help' for usage."
+        return 1
     esac
+    return $?
 }
