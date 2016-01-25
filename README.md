@@ -43,16 +43,6 @@ This example creates a Java-- workspace, gets the source code for a package, ins
 
 ## Help
 
-### jmm install
-
-Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. An executable to run the `.jar` is also created and placed in the `$JMMPATH/bin` directory. All imports are resolved to packages in the current workspace.
-
-	jmm install ./src/github/com/ricallinson/jmminstall
-
-The following will install the current working directory.
-
-	jmm install
-
 ### jmm clean
 
 Removes all files in the `$JMMPATH/bin` and `$JMMPATH/pkg` directories.
@@ -80,6 +70,16 @@ Creates a new Java-- workspace at the given path and exports the `$JMMPATH` as t
 Determines if the current directory is part of a Java-- workspace. If it is the `$JMMPATH` is changed to that workspace.
 
 	jmm here
+
+### jmm install
+
+Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. An executable to run the `.jar` is also created and placed in the `$JMMPATH/bin` directory. All imports are resolved to packages in the current workspace.
+
+	jmm install ./src/github/com/ricallinson/jmminstall
+
+The following will install the current working directory.
+
+	jmm install
 
 ### jmm lint
 

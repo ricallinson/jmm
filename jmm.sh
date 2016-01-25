@@ -383,9 +383,6 @@ jmm() {
     fi
 
     case $1 in
-    "install" )
-        jmm_install $2
-    ;;
     "clean" )
         jmm_clean
     ;;
@@ -397,6 +394,9 @@ jmm() {
     ;;
     "here" )
         jmv_here $2
+    ;;
+    "install" )
+        jmm_install $2
     ;;
     "lint" )
         jmm_lint "${@:2}"
