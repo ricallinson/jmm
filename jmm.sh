@@ -359,10 +359,30 @@ jmm() {
     case $1 in
     "help" )
         jmm_help
+        return
     ;;
     "" )
         jmm_help
+        return
     ;;
+    "env" )
+        jmm_env
+        return
+    ;;
+    "version" )
+        jmm_version
+        return
+    ;;
+    esac
+
+    if [[ -z $JMMPATH ]]; then
+        echo
+        echo "You must be in a Java-- workspace to use '$1'."
+        echo
+        return
+    fi
+
+    case $1 in
     "build" )
         jmm_build $2
     ;;
@@ -371,9 +391,6 @@ jmm() {
     ;;
     "doc" )
         echo "TODO"
-    ;;
-    "env" )
-        jmm_env
     ;;
     "get" )
         jmm_get "${@:2}"
@@ -392,9 +409,6 @@ jmm() {
     ;;
     "test" )
         jmm_test "${@:2}"
-    ;;
-    "version" )
-        jmm_version
     ;;
     *)
         echo "jmm: unknown subcommand \"$1\""
