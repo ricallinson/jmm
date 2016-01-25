@@ -131,15 +131,15 @@ jmm_helper_build_jar() {
     jarName=$(jmm_helper_get_jar_name "$1")
     classPath=$(jmm_helper_get_class_path "$1")
     classPath=${classPath//[\/]/\.}
-    classFiles=""
+    classFiles=()
     classPaths=""
     for file; do
         if [[ $file != "_test.java"* ]]; then
-            classFiles="$classFiles $file"
+            classFiles+=("$file")
             classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
         fi
     done
-    javac -d "$JMMPATH/pkg" $classFiles
+    javac -d "$JMMPATH/pkg" "${classFiles[@]}"
     if [[ $? -eq 1 ]]; then
         return 1
     fi
