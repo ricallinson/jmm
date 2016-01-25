@@ -96,8 +96,10 @@ jmm_helper_build_jar() {
 	classFiles=""
 	classPaths=""
 	for file; do
-		classFiles="$classFiles $file"
-		classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
+		if [[ $file != "_test.java"* ]]; then
+			classFiles="$classFiles $file"
+			classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
+		fi
 	done
 	javac -d $JMMPATH/pkg $classFiles
 	if [[ $? -eq 1 ]]; then
@@ -142,6 +144,26 @@ jmm_helper_find_java_files() {
 		files="$files $file $imports"
 	done
 	echo $files
+}
+
+jmm_run_test() {
+	local files
+	local dir
+	# get all the files used in the imports.
+	files="$1 $(jmm_helper_resolve_imports $1)"
+	# get all the files in the same directory.
+	for file in $(find $(dirname $1) -name '*.java'); do
+		if [[ ! -d "$file" ]] && [[ "$file" != *"_test.java" ]]; then
+			files="$files $file"
+		fi
+	done
+	# run the test.
+	jmm_run $files
+	if [[ $? -eq 1 ]]; then
+		echo "fail"
+	else
+		echo "pass"
+	fi
 }
 
 #
@@ -191,7 +213,7 @@ jmm_clean() {
 
 jmm_env() {
 	echo "JMMPATH=\"$JMMPATH\""
-	echo "JMMSCRIPT=\"$JMMSCRIPT\""
+	echo "JMMHOME=\"$JMMHOME\""
 	echo "JAVA_HOME=\"$JAVA_HOME\""
 }
 
@@ -238,7 +260,7 @@ jmm_help() {
 	echo "    here        set $JMMPATH to the given directory"
 	echo "    list*       list packages"
 	echo "    run         compile and run Jmm program (the first file must have the main method)"
-	echo "    test*       test packages"
+	echo "    test        test packages"
 	echo "    version     print Jmm version"
 	echo
 	echo "    * not implemented"
@@ -282,6 +304,22 @@ jmm_run() {
 	local jarFile
 	jarFile=$(jmm_helper_build_jar "$@")
 	java -jar $jarFile
+}
+
+jmm_test() {
+	local failures
+	failures=0
+	for path in "$@"; do
+		if [[ -d "$path" ]]; then
+			# if it's a directory recursively find all test files and execute them one at a time.
+			for file in $path/*; do
+				jmm_test $file
+			done
+		elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
+			# if the file ends with "_test.java" then run it.
+			jmm_run_test $path
+		fi
+	done
 }
 
 jmm_version() {
@@ -331,7 +369,7 @@ jmm() {
 		jmm_run "${@:2}"
 	;;
 	"test" )
-		echo "TODO"
+		jmm_test "${@:2}"
 	;;
 	"tool" )
 		echo "TODO"

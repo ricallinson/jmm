@@ -87,7 +87,7 @@ Checks the given packages or files against the Java-- opinionated style. Note: T
 
 Provide one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `$JMMPATH/bin` directory. Note: this will overwrite an existing `.jar` if it has the same name.
 
-	jmm run ./src/github/com/ricallinson/jmmrun/TestClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
+	jmm run ./src/github/com/ricallinson/jmmrun/RunClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
 
 ### jmm version
 
