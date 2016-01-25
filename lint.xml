@@ -1,7 +1,5 @@
 <?xml version="1.0"?>
-<!DOCTYPE module PUBLIC
-          "-//Puppy Crawl//DTD Check Configuration 1.3//EN"
-          "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
 
 <!--
     Checkstyle is very configurable. Be sure to read the documentation at
@@ -10,12 +8,49 @@
 
 <module name = "Checker">
     <property name="charset" value="UTF-8"/>
-
     <property name="severity" value="error"/>
-
     <property name="fileExtensions" value="java"/>
-
     <module name="TreeWalker">
-        <property name="tabWidth" value="4"/>
+        <module name="AvoidNestedBlocks"/>
+        <module name="EmptyBlock"/>
+        <module name="InterfaceIsType"/>
+        <module name="OneTopLevelClass"/>
+        <module name="ArrayTrailingComma"/>
+        <module name="AvoidInlineConditionals"/>
+        <module name="DeclarationOrder"/>
+        <module name="EmptyStatement"/>
+        <module name="EqualsAvoidNull"/>
+        <module name="IllegalCatch"/>
+        <module name="IllegalThrows"/>
+        <module name="IllegalToken">
+            <!-- opinionated style -->
+            <!-- http://checkstyle.sourceforge.net/apidocs/com/puppycrawl/tools/checkstyle/api/TokenTypes.html -->
+            <property name="tokens" value="AT"/>
+            <property name="tokens" value="ANNOTATION"/>
+            <property name="tokens" value="ABSTRACT"/>
+            <property name="tokens" value="LITERAL_PROTECTED"/>
+        </module>
+        <module name="InnerAssignment"/>
+        <module name="MultipleStringLiterals"/>
+        <module name="MultipleVariableDeclarations"/>
+        <module name="OneStatementPerLine"/>
+        <module name="OverloadMethodsDeclarationOrder"/>
+        <module name="PackageDeclaration"/>
+        <module name="RequireThis"/>
+        <module name="StringLiteralEquality"/>
+        <module name="AvoidStaticImport"/>
+        <module name="RedundantImport"/>
+        <module name="UnusedImports"/>
+        <module name="CyclomaticComplexity">
+            <property name="max" value="8"/>
+        </module>
+        <module name="Indentation"/>
+        <module name="OuterTypeFilename"/>
+        <module name="RedundantModifier"/>
+        <module name="OuterTypeNumber"/>
+        <module name="AnonInnerLength">
+            <property name="max" value="0"/>
+        </module>
     </module>
+    <module name="NewlineAtEndOfFile"/>
 </module>
