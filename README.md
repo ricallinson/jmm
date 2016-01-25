@@ -32,26 +32,26 @@ Self contained `.jar` files are put in the `bin` directory along with an executa
 
 ### Getting Started Example
 
-This example creates a Java-- workspace, gets the source code for a package, builds a `.jar` and then executes it.
+This example creates a Java-- workspace, gets the source code for a package, installs a `.jar` and then executes it.
 
 	mkdir ./jmmtest
 	cd ./jmmtest
 	jmm here .
 	jmm get github.com/ricallinson/jmmexample
-	jmm build ./src/github/com/ricallinson/jmmexample
+	jmm install ./src/github/com/ricallinson/jmmexample
 	jmmexample
 
 ## Help
 
-### jmm build
+### jmm install
 
 Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. An executable to run the `.jar` is also created and placed in the `$JMMPATH/bin` directory. All imports are resolved to packages in the current workspace.
 
-	jmm build ./src/github/com/ricallinson/jmmbuild
+	jmm install ./src/github/com/ricallinson/jmminstall
 
-The following will build the current working directory.
+The following will install the current working directory.
 
-	jmm build
+	jmm install
 
 ### jmm clean
 
@@ -85,13 +85,13 @@ Determines if the current directory is part of a Java-- workspace. If it is the 
 
 Checks the given packages or files against the Java-- opinionated style. Note: The opinionated style is not complete yet.
 
-	jmm lint ./src/github/com/ricallinson/jmmbuild
+	jmm lint ./src/github/com/ricallinson/jmminstall
 
 ### jmm list
 
 List all packages under a given directory.
 
-	jmm list ./src/github/com/ricallinson/jmmbuild
+	jmm list ./src/github/com/ricallinson/jmminstall
 
 The following will list packages in the current working directory.
 
@@ -105,7 +105,7 @@ Provide one or more `.java` files to run. The first file must have the main meth
 
 ### jmm test
 
-Tests in Java-- are identified by the postfix `_test` on a `.java` file. The class must have a main method and be in the same directory as the code it's testing or import the code it's testing. Test files are executed one at time in isolation from each other. All test files are excluded from a build.
+Tests in Java-- are identified by the postfix `_test` on a `.java` file. The class must have a main method and be in the same directory as the code it's testing or import the code it's testing. Test files are executed one at time in isolation from each other. All test files are excluded from a install.
 
 	jmm test ./src/github/com/ricallinson/jmmtest/TestClass_test.java
 

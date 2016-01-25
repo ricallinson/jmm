@@ -1,6 +1,6 @@
-package github.com.ricallinson.jmmbuild;
+package github.com.ricallinson.jmminstall;
 
-import github.com.ricallinson.jmmbuild.sub.*;
+import github.com.ricallinson.jmminstall.sub.*;
 
 public class BuildClass {  
     public static void main(String args[]) {

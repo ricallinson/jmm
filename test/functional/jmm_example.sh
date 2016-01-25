@@ -5,7 +5,7 @@ mkdir ./jmmtest
 cd ./jmmtest
 jmm here .
 jmm get github.com/ricallinson/jmmexample
-jmm build ./src/github/com/ricallinson/jmmexample
+jmm install ./src/github/com/ricallinson/jmmexample
 data=$(jmmexample)
 cd ..
 rm -rf ./jmmtest

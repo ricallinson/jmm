@@ -2,7 +2,7 @@ package github.com.ricallinson.jmmjava;
 
 import java.io.IOException;
 import java.net.ServerSocket;
-import github.com.ricallinson.jmmbuild.sub.*;
+import github.com.ricallinson.jmminstall.sub.*;
 
 public class JavaClass {  
     public static void main(String args[]) throws IOException {

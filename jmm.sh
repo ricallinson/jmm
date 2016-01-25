@@ -84,7 +84,7 @@ jmm_helper_resolve() {
     echo "`pwd -P`" # output full, link-resolved path
 }
 
-jmm_helper_build_jar() {
+jmm_helper_install_jar() {
     local jarName
     local classPath
     local classFiles
@@ -171,7 +171,7 @@ jmm_run_test() {
 # Commands
 #
 
-jmm_build() {
+jmm_install() {
     local path
     local main
     local imports
@@ -203,7 +203,7 @@ jmm_build() {
             files="$files $file $imports"
         fi
     done
-    jar=$(jmm_helper_build_jar $main $files)
+    jar=$(jmm_helper_install_jar $main $files)
     if [[ "$jar" = "" ]]; then
         return
     fi
@@ -257,7 +257,7 @@ jmm_help() {
     echo
     echo "The commands are:"
     echo
-    echo "    build       compile packages and dependencies"
+    echo "    install       compile packages and dependencies"
     echo "    clean       remove object files"
     echo "    doc         (not implemented) show documentation for package or symbol"
     echo "    env         print Jmm environment information"
@@ -327,7 +327,7 @@ jmm_list() {
 
 jmm_run() {
     local jarFile
-    jarFile=$(jmm_helper_build_jar "$@")
+    jarFile=$(jmm_helper_install_jar "$@")
     java -jar $jarFile
 }
 
@@ -383,8 +383,8 @@ jmm() {
     fi
 
     case $1 in
-    "build" )
-        jmm_build $2
+    "install" )
+        jmm_install $2
     ;;
     "clean" )
         jmm_clean
