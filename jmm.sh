@@ -221,6 +221,9 @@ jmm_run_test() {
 # Commands
 #
 
+# @String $1 - Directory path
+# @return "compile error" || ""
+# Compiles the files in the given directory resolving all packages and places final jar in $JMMHOME/bin.
 jmm_install() {
     local path
     local mains
@@ -267,12 +270,14 @@ jmm_install() {
     return 0
 }
 
+# Deletes all files in $JMMHOME/bin and $JMMHOME/pkg
 jmm_clean() {
     rm -rf "${JMMPATH:?}/bin/"*
     rm -rf "$JMMPATH/pkg/"*
     return 0
 }
 
+# Prints the exported variables used by Java--.
 jmm_env() {
     echo "JMMPATH=\"$JMMPATH\""
     echo "JMMHOME=\"$JMMHOME\""
@@ -280,11 +285,13 @@ jmm_env() {
     return 0
 }
 
-jmm_get() { # currently only works with github zip files
+# @String $@ - Package names
+# Downloads the given github.com package(s) and unpacks them into $JMMHOME/src.
+# currently only works with github.com zip files.
+jmm_get() {
     local packageDir
     local packageName
     for package; do
-        # need to filter out none github imports
         curl -s -o "$JMMPATH/master.zip" -L "$package/archive/master.zip"
         if grep -q "error" "$JMMPATH/master.zip"; then
             rm "$JMMPATH/master.zip"
@@ -304,6 +311,7 @@ jmm_get() { # currently only works with github zip files
     return 0
 }
 
+# Prints the available commands.
 jmm_help() {
     echo "Jmm is a tool for managing Java-- source code."
     echo
@@ -330,6 +338,9 @@ jmm_help() {
     return 0
 }
 
+# @String $1 - Directory path
+# Sets the Java- workspace either by walking up from the given directory
+# to find one or creating one in the given directory.
 jmv_here() {
     local wPath
     if [ -z "$1" ]; then
@@ -357,6 +368,8 @@ jmv_here() {
     return 0
 }
 
+# @String $@ - Directory path(s)
+# Runs the lint rules over the given directories.
 jmm_lint() {
     local files
     for file in "$@"; do
@@ -370,6 +383,8 @@ jmm_lint() {
     return 0
 }
 
+# @String $1 - Directory path
+# Prints the packages used in the given directory.
 jmm_list() {
     local path
     path="$1"
@@ -392,6 +407,8 @@ jmm_list() {
     return 0
 }
 
+# @String $@ - File path(s) to .java files
+# Creates a jar in $JMMHOME/bin and executes it.
 jmm_run() {
     local jarFile
     jmm_lint "$@"
@@ -403,6 +420,8 @@ jmm_run() {
     return $?
 }
 
+# @String $@ - Directory or file path(s) to &_test.java files
+# Runs the tests for the given or found files.
 jmm_test() {
     jmm_lint "$@"
     if [[ $? -gt 0 ]]; then
@@ -422,6 +441,7 @@ jmm_test() {
     return 0
 }
 
+# Prints the current version of this tool.
 jmm_version() {
     echo $JMMVERSION
 }
@@ -430,6 +450,7 @@ jmm_version() {
 # Interface
 #
 
+# The main entry point.
 jmm() {
     case $1 in
     "help" )
