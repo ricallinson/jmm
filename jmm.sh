@@ -178,7 +178,12 @@ jmm_build() {
     local files
     local jar
     local exe
-    path=$(jmm_helper_path_resolve $1) # TODO: strip last / if it's there.
+    local path
+    path="$1"
+    if [[ -z "$path" ]]; then
+        path="."
+    fi
+    path=$(jmm_helper_path_resolve "$path") # TODO: strip last / if it's there.
     main=""
     files=""
     for file in $(find $path -name '*.java'); do
@@ -300,21 +305,24 @@ jmm_lint() {
 }
 
 jmm_list() {
-    for path in $1; do
-        if [[ -d "$path" ]]; then
-            for dir in $path/*; do
-                jmm_list $dir
+    local path
+    path="$1"
+    if [[ -z "$path" ]]; then
+        path="."
+    fi
+    if [[ -d "$path" ]]; then
+        for dir in $path/*; do
+            jmm_list $dir
+        done
+    else
+        if [[ "$path" == *".java" ]]; then
+            for package in $(grep ^package $1); do
+                if [[ "$package" != "package" ]]; then
+                    echo "$package"
+                fi
             done
-        else
-            if [[ "$path" == *".java" ]]; then
-                for package in $(grep ^package $1); do
-                    if [[ "$package" != "package" ]]; then
-                        echo "$package"
-                    fi
-                done
-            fi
         fi
-    done
+    fi
 }
 
 jmm_run() {
