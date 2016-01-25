@@ -79,7 +79,7 @@ Determines if the current directory is part of a Java-- workspace. If it is the 
 
 ### jmm lint
 
-Checks the given packages or files against the Java-- opinionated style. Note: The opinionated style is not complete.
+Checks the given packages or files against the Java-- opinionated style. Note: The opinionated style is not complete yet.
 
 	jmm lint ./src/github/com/ricallinson/jmmbuild
 
@@ -113,7 +113,7 @@ Prints the version of jmm in use.
 
 ## Legal Packages
 
-This is the complete list of "legal" Java-- packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list.
+This is the complete list of "legal" Java-- packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
 
 * [java.io.BufferedReader](https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html)
 * [java.io.InputStreamReader](https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html)
