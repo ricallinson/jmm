@@ -1,12 +1,14 @@
 package github.com.ricallinson.jmmjava;
 
-import java.time.Year;
+import java.io.IOException;
+import java.net.ServerSocket;
 import github.com.ricallinson.jmmbuild.sub.*;
 
 public class JavaClass {  
-    public static void main(String args[]) {
+    public static void main(String args[]) throws IOException {
+    	ServerSocket listener = new ServerSocket(8080);
+    	listener.close();
         OtherClass c = new OtherClass();
-        int time = Year.MAX_VALUE;
         System.out.println(c.msg());
         System.out.println("Here's one random number: " + Math.random());
     }
