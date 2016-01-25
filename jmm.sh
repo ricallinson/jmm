@@ -21,18 +21,24 @@ LEGAL_PACKAGES=(                # This list is temporary until someone thinks ab
 # Helper functions
 #
 
+# @String $1 - Java import path
+# @return "false" || ""
+# Checks an import against the legal Java-- packages.
 jmm_package_allowed() {
     if [[ "$1" == "java."* ]]; then
         for package in ${LEGAL_PACKAGES[@]}; do
             if [[ "$1" == "$package"* ]]; then
-                return
+                return 0
             fi
         done
     fi
     echo "false"
-    return 0
+    return 1
 }
 
+# @String $1 - Directory path
+# @return "dir/path"
+# Returns an absolute path from the give input path.
 jmm_helper_path_resolve() {
     if [ ${1:0:1} = "." ]; then # if starts with a .
         echo $(pwd)${1:1}
@@ -46,13 +52,19 @@ jmm_helper_path_resolve() {
     return 0
 }
 
-jmm_helper_get_dir_name() {
+# @String $1 - Directory path
+# @return "name"
+# Returns the jar name for a given directory path.
+jmm_helper_get_jar_name() {
     local base
     base=$(dirname $1)
     echo ${base##*/}
     return 0
 }
 
+# @String $1 - Directory path
+# @return "dir/path"
+# Returns a class path from a given absolute path.
 jmm_helper_get_class_path() {
     local absPath
     local jmmSize
@@ -66,6 +78,10 @@ jmm_helper_get_class_path() {
     return 0
 }
 
+# @String $1 - Directory path
+# @String $2 - Directory name
+# @return "dir/path"
+# Searches up through the directories until it finds directory name a match for the given input string.
 jmm_helper_find_up() {
     local path
     path=$1
@@ -76,6 +92,9 @@ jmm_helper_find_up() {
     return 0
 }
 
+# @String $1 - Directory path
+# @return "dir/path" || ""
+# Searches up through the directories until it finds a directory named 'src'.
 jmm_helper_find_src() {
     local dir
     dir="$(jmm_helper_find_up $1 'src')"
@@ -85,6 +104,8 @@ jmm_helper_find_src() {
     return 0
 }
 
+# @String $1 - Directory path
+# Resolves the given directory if it exists.
 jmm_helper_resolve() {
     cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
     echo "`pwd -P`" # output full, link-resolved path
@@ -98,7 +119,7 @@ jmm_helper_build_jar() {
     local classPaths
     mkdir -p $JMMPATH/bin
     mkdir -p $JMMPATH/pkg
-    jarName=$(jmm_helper_get_dir_name $1)
+    jarName=$(jmm_helper_get_jar_name $1)
     classPath=$(jmm_helper_get_class_path $1)
     classPath=${classPath//[\/]/\.}
     classFiles=""
@@ -170,12 +191,12 @@ jmm_run_test() {
     done
     # run the test.
     jmm_run $files
-    if [[ $? -eq 1 ]]; then
-        echo "fail"
-    else
+    if [[ $? -eq 0 ]]; then
         echo "pass"
+        return 0
     fi
-    return 0
+    echo "fail"
+    return 1
 }
 
 #
@@ -361,11 +382,15 @@ jmm_run() {
     fi
     jarFile=$(jmm_helper_build_jar "$@")
     java -jar $jarFile
-    return 0
+    return $?
 }
 
 jmm_test() {
     local failures
+    jmm_lint $@
+    if [[ $? -gt 0 ]]; then
+        return 1
+    fi
     failures=0
     for path in "$@"; do
         if [[ -d "$path" ]]; then
