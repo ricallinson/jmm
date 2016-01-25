@@ -1,4 +1,4 @@
-language: null
+language: java
 script:
   - ./test/run.sh
 os:
