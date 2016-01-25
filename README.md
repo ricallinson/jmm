@@ -32,7 +32,7 @@ Self contained `.jar` files are put in the `bin` directory along with an executa
 
 ### Getting Started Example
 
-This example creates a Java-- workspace, gets the source code for a module, builds a `.jar` and then executes it.
+This example creates a Java-- workspace, gets the source code for a package, builds a `.jar` and then executes it.
 
 	mkdir ./jmmtest
 	cd ./jmmtest
@@ -45,7 +45,7 @@ This example creates a Java-- workspace, gets the source code for a module, buil
 
 ### jmm build
 
-Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. An executable to run the `.jar` is also created and placed in the `$JMMPATH/bin` directory. All imports are resolved to modules in the current workspace.
+Builds a `.jar` from the `.java` files in the given directory. A `.jar` named the same as the directory is created and placed in the `$JMMPATH/bin` directory. An executable to run the `.jar` is also created and placed in the `$JMMPATH/bin` directory. All imports are resolved to packages in the current workspace.
 
 	jmm build ./src/github/com/ricallinson/jmmbuild
 
