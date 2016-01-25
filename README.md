@@ -49,6 +49,10 @@ Builds a `.jar` from the `.java` files in the given directory. A `.jar` named th
 
 	jmm build ./src/github/com/ricallinson/jmmbuild
 
+The following will build the current working directory.
+
+	jmm build
+
 ### jmm clean
 
 Removes all files in the `$JMMPATH/bin` and `$JMMPATH/pkg` directories.
@@ -87,7 +91,11 @@ Checks the given packages or files against the Java-- opinionated style. Note: T
 
 List all packages under a given directory.
 
-	jmm list .
+	jmm list ./src/github/com/ricallinson/jmmbuild
+
+The following will list packages in the current working directory.
+
+	jmm list
 
 ### jmm run
 
