@@ -3,7 +3,8 @@
 #
 
 export JMMVERSION="0.0.1"
-export JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+export JMMHOME=$JMMHOME
 
 #
 # Constants
