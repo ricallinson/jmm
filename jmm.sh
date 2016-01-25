@@ -1,3 +1,7 @@
+#
+# Lint check by http://www.shellcheck.net/
+#
+
 export JMMVERSION="0.0.1"
 export JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
@@ -26,7 +30,7 @@ LEGAL_PACKAGES=(                # This list is temporary until someone thinks ab
 # Checks an import against the legal Java-- packages.
 jmm_package_allowed() {
     if [[ "$1" == "java."* ]]; then
-        for package in ${LEGAL_PACKAGES[@]}; do
+        for package in "${LEGAL_PACKAGES[@]}"; do
             if [[ "$1" == "$package"* ]]; then
                 return 0
             fi
@@ -40,14 +44,14 @@ jmm_package_allowed() {
 # @return "dir/path"
 # Returns an absolute path from the give input path.
 jmm_helper_path_resolve() {
-    if [ ${1:0:1} = "." ]; then # if starts with a .
-        echo $(pwd)${1:1}
-    elif [ ${1:0:1} = "~" ]; then # if starts with a ~
-        echo  $HOME${1:1}
-    elif [ ${1:0:1} = "/" ]; then # if starts with a /
-        echo  $1
+    if [ "${1:0:1}" = "." ]; then # if starts with a .
+        echo "$(pwd)${1:1}"
+    elif [ "${1:0:1}" = "~" ]; then # if starts with a ~
+        echo "$HOME${1:1}"
+    elif [ "${1:0:1}" = "/" ]; then # if starts with a /
+        echo "$1"
     else
-        echo $(pwd)/$1
+        echo "$(pwd)/$1"
     fi
     return 0
 }
@@ -57,8 +61,8 @@ jmm_helper_path_resolve() {
 # Returns the jar name for a given directory path.
 jmm_helper_get_jar_name() {
     local base
-    base=$(dirname $1)
-    echo ${base##*/}
+    base=$(dirname "$1")
+    echo "${base##*/}"
     return 0
 }
 
@@ -70,11 +74,11 @@ jmm_helper_get_class_path() {
     local jmmSize
     local absSize
     local absPath
-    absPath=$(jmm_helper_path_resolve $1)
+    absPath=$(jmm_helper_path_resolve "$1")
     jmmSize=${#JMMPATH}+5 # remove /src/
-    absSize=${#absPath}
-    absPath=${absPath:0:absSize-5} # remove .class
-    echo ${absPath:$jmmSize}
+    absSize=$((${#absPath}-5))
+    absPath=${absPath:0:$absSize} # remove .class
+    echo "${absPath:$jmmSize}"
     return 0
 }
 
@@ -97,7 +101,7 @@ jmm_helper_find_up() {
 # Searches up through the directories until it finds a directory named 'src'.
 jmm_helper_find_src() {
     local dir
-    dir="$(jmm_helper_find_up $1 'src')"
+    dir="$(jmm_helper_find_up "$1" 'src')"
     if [ -e "$dir/src" ]; then
         echo "$dir/src"
     fi
@@ -109,7 +113,7 @@ jmm_helper_find_src() {
 # Resolves the given directory if it exists.
 jmm_helper_resolve() {
     cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
-    echo "`pwd -P`" # output full, link-resolved path
+    pwd -P # output full, link-resolved path
     return 0
 }
 
@@ -121,10 +125,10 @@ jmm_helper_build_jar() {
     local classPath
     local classFiles
     local classPaths
-    mkdir -p $JMMPATH/bin
-    mkdir -p $JMMPATH/pkg
-    jarName=$(jmm_helper_get_jar_name $1)
-    classPath=$(jmm_helper_get_class_path $1)
+    mkdir -p "$JMMPATH/bin"
+    mkdir -p "$JMMPATH/pkg"
+    jarName=$(jmm_helper_get_jar_name "$1")
+    classPath=$(jmm_helper_get_class_path "$1")
     classPath=${classPath//[\/]/\.}
     classFiles=""
     classPaths=""
@@ -134,12 +138,12 @@ jmm_helper_build_jar() {
             classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
         fi
     done
-    javac -d $JMMPATH/pkg $classFiles
+    javac -d "$JMMPATH/pkg" $classFiles
     if [[ $? -eq 1 ]]; then
         return 1
     fi
-    jar cfe $JMMPATH/bin/$jarName.jar $classPath $classPaths
-    echo $JMMPATH/bin/$jarName.jar
+    jar cfe "$JMMPATH/bin/$jarName.jar" "$classPath" $classPaths
+    echo "$JMMPATH/bin/$jarName.jar"
     return 0
 }
 
@@ -149,15 +153,15 @@ jmm_helper_build_jar() {
 jmm_helper_resolve_imports() {
     local files
     files=""
-    for import in $(grep ^import $1); do
-        if [ "$import" != "import" ] && [ -n $import ]; then
-            if [ "${import:0:4}" == "java" ] && [ "$(jmm_package_allowed $import)" == "false" ]; then
+    for import in $(grep ^import "$1"); do
+        if [ "$import" != "import" ] && [ -n "$import" ]; then
+            if [ "${import:0:4}" == "java" ] && [ "$(jmm_package_allowed "$import")" == "false" ]; then
                 echo "$ILLEGAL_PACKAGE: $import"
                 return
             elif [ "${import:0:4}" != "java" ]; then
                 import=${import//[\.]/\/}
-                import=$(dirname $import)
-                newFiles=$(jmm_helper_find_java_files $JMMPATH/src/$import)
+                import=$(dirname "$import")
+                newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
                 if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
                     echo "$newFiles"
                     return
@@ -166,7 +170,7 @@ jmm_helper_resolve_imports() {
             fi
         fi
     done
-    echo $files
+    echo "$files"
     return 0
 }
 
@@ -176,15 +180,15 @@ jmm_helper_resolve_imports() {
 jmm_helper_find_java_files() {
     local files
     files=""
-    for file in $(find $1 -name '*.java'); do
-        imports=$(jmm_helper_resolve_imports $file)
+    for file in $(find "$1" -name "*.java"); do
+        imports=$(jmm_helper_resolve_imports "$file")
         if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
             echo "$imports"
             return
         fi
         files="$files $file $imports"
     done
-    echo $files
+    echo "$files"
     return 0
 }
 
@@ -195,9 +199,9 @@ jmm_run_test() {
     local files
     local dir
     # get all the files used in the imports.
-    files="$1 $(jmm_helper_resolve_imports $1)"
+    files="$1 $(jmm_helper_resolve_imports "$1")"
     # get all the files in the same directory.
-    for file in $(find $(dirname $1) -name '*.java'); do
+    for file in $(find "$(dirname "$1")" -name "*.java"); do
         if [[ ! -d "$file" ]] && [[ "$file" != *"_test.java" ]]; then
             files="$files $file"
         fi
@@ -218,7 +222,7 @@ jmm_run_test() {
 
 jmm_install() {
     local path
-    local main
+    local mains
     local imports
     local files
     local jar
@@ -233,18 +237,18 @@ jmm_install() {
         return 1
     fi
     path=$(jmm_helper_path_resolve "$path") # TODO: strip last / if it's there.
-    main=""
+    mains=""
     files=""
-    for file in $(find $path -name '*.java'); do
-        if [ "$main" = "" ] && grep -q "public static void main(" "$file"; then
-            imports=$(jmm_helper_resolve_imports $file)
+    for file in $(find "$path" -name '*.java'); do
+        if [ "$mains" = "" ] && grep -q "public static void main(" "$file"; then
+            imports=$(jmm_helper_resolve_imports "$file")
             if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
                 echo "$imports"
                 return
             fi
-            main="$file $imports"
+            mains="$file $imports"
         else
-            imports=$(jmm_helper_resolve_imports $file)
+            imports=$(jmm_helper_resolve_imports "$file")
             if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
                 echo "$imports"
                 return
@@ -252,19 +256,19 @@ jmm_install() {
             files="$files $file $imports"
         fi
     done
-    jar=$(jmm_helper_build_jar $main $files)
+    jar=$(jmm_helper_build_jar $mains $files)
     if [[ "$jar" = "" ]]; then
         return
     fi
     exe=${jar:0:${#jar}-4}
-    echo "java -jar $jar" > $exe
-    chmod +x $exe
+    echo "java -jar $jar" > "$exe"
+    chmod +x "$exe"
     return 0
 }
 
 jmm_clean() {
-    rm -rf $JMMPATH/bin/*
-    rm -rf $JMMPATH/pkg/*
+    rm -rf "${JMMPATH:?}/bin/"*
+    rm -rf "$JMMPATH/pkg/"*
     return 0
 }
 
@@ -280,21 +284,21 @@ jmm_get() { # currently only works with github zip files
     local packageName
     for package; do
         # need to filter out none github imports
-        $(curl -s -o $JMMPATH/master.zip -L $package/archive/master.zip)
+        curl -s -o "$JMMPATH/master.zip" -L "$package/archive/master.zip"
         if grep -q "error" "$JMMPATH/master.zip"; then
-            rm $JMMPATH/master.zip
+            rm "$JMMPATH/master.zip"
             echo "Package '$package' not found"
             return 1
         fi
         packageDir=${package//[\.]/\/}
-        rm -rf $JMMPATH/src/$packageDir
-        mkdir -p $JMMPATH/src/$packageDir
-        unzip -qq $JMMPATH/master.zip -d $JMMPATH/src/$packageDir
-        packageName=$(basename $package)
-        mv $JMMPATH/src/$packageDir/$packageName-master/* $JMMPATH/src/$packageDir/$packageName-master/..
-        mv $JMMPATH/src/$packageDir/$packageName-master/.[^.]* $JMMPATH/src/$packageDir/$packageName-master/..
-        rm -r $JMMPATH/src/$packageDir/$packageName-master
-        rm $JMMPATH/master.zip
+        rm -rf "$JMMPATH/src/$packageDir"
+        mkdir -p "$JMMPATH/src/$packageDir"
+        unzip -qq "$JMMPATH/master.zip" -d "$JMMPATH/src/$packageDir"
+        packageName="$(basename $package)"
+        mv "$JMMPATH/src/$packageDir/$packageName-master/"* "$JMMPATH/src/$packageDir/$packageName-master/.."
+        mv "$JMMPATH/src/$packageDir/$packageName-master/".[^.]* "$JMMPATH/src/$packageDir/$packageName-master/.."
+        rm -r "$JMMPATH/src/$packageDir/$packageName-master"
+        rm "$JMMPATH/master.zip"
     done
     return 0
 }
@@ -327,21 +331,21 @@ jmm_help() {
 
 jmv_here() {
     local wPath
-    if [ -z $1 ]; then
-        wPath=$(jmm_helper_find_src $(pwd))
+    if [ -z "$1" ]; then
+        wPath=$(jmm_helper_find_src "$(pwd)")
         wPath=${wPath%/*}
     else
-        wPath=$(jmm_helper_resolve $1)
+        wPath=$(jmm_helper_resolve "$1")
     fi
-    if [ -z $wPath ]; then
+    if [ -z "$wPath" ]; then
         echo
         echo "This command must be run in a Jmm workspace"
         echo
         return 0
     fi
-    mkdir -p $wPath/bin
-    mkdir -p $wPath/pkg
-    mkdir -p $wPath/src
+    mkdir -p "$wPath/bin"
+    mkdir -p "$wPath/pkg"
+    mkdir -p "$wPath/src"
     export JMMPATH=$wPath
     export PATH=$PATH:$JMMPATH/bin
 
@@ -357,9 +361,9 @@ jmm_lint() {
     for file in "$@"; do
         files="$files $file"
     done
-    result=$(java -jar $JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar -c $JMMHOME/lint.xml $files)
+    result=$(java -jar "$JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar" -c "$JMMHOME/lint.xml" $files)
     if [[ $? -gt 0 ]]; then
-        echo $result
+        echo "$result"
         return 1
     fi
     return 0
@@ -373,11 +377,11 @@ jmm_list() {
     fi
     if [[ -d "$path" ]]; then
         for dir in $path/*; do
-            jmm_list $dir
+            jmm_list "$dir"
         done
     else
         if [[ "$path" == *".java" ]]; then
-            for package in $(grep ^package $1); do
+            for package in $(grep ^package "$1"); do
                 if [[ "$package" != "package" ]]; then
                     echo "$package"
                 fi
@@ -389,31 +393,29 @@ jmm_list() {
 
 jmm_run() {
     local jarFile
-    jmm_lint $@
+    jmm_lint "$@"
     if [[ $? -gt 0 ]]; then
         return 1
     fi
     jarFile=$(jmm_helper_build_jar "$@")
-    java -jar $jarFile
+    java -jar "$jarFile"
     return $?
 }
 
 jmm_test() {
-    local failures
-    jmm_lint $@
+    jmm_lint "$@"
     if [[ $? -gt 0 ]]; then
         return 1
     fi
-    failures=0
     for path in "$@"; do
         if [[ -d "$path" ]]; then
             # if it's a directory recursively find all test files and execute them one at a time.
             for dir in $path/*; do
-                jmm_test $dir
+                jmm_test "$dir"
             done
         elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
             # if the file ends with "_test.java" then run it.
-            jmm_run_test $path
+            jmm_run_test "$path"
         fi
     done
     return 0
@@ -438,7 +440,7 @@ jmm() {
         return 0
     ;;
     "here" )
-        jmv_here $2
+        jmv_here "$2"
         return 0
     ;;
     "env" )
@@ -451,7 +453,7 @@ jmm() {
     ;;
     esac
 
-    if [[ -z $JMMPATH ]]; then
+    if [[ -z "$JMMPATH" ]]; then
         echo
         echo "You must be in a Java-- workspace to use '$1'."
         echo
@@ -469,13 +471,13 @@ jmm() {
         jmm_get "${@:2}"
     ;;
     "install" )
-        jmm_install $2
+        jmm_install "$2"
     ;;
     "lint" )
         jmm_lint "${@:2}"
     ;;
     "list" )
-        jmm_list $2
+        jmm_list "$2"
     ;;
     "run" )
         jmm_run "${@:2}"
