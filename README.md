@@ -115,13 +115,7 @@ Prints the version of jmm in use.
 
 This is the complete list of "legal" Java-- packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
 
-* [java.io.BufferedReader](https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html)
-* [java.io.InputStreamReader](https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html)
-* [java.io.IOException](https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html)
-* [java.io.PrintWriter](https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html)
-* [java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
-* [java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
-* [java.time](https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html)
+* Nothing to see here
 
 ## Run Tests
 
