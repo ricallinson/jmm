@@ -253,17 +253,15 @@ jmm_help() {
 	echo
 	echo "    build       compile packages and dependencies"
 	echo "    clean       remove object files"
-	echo "    doc*        show documentation for package or symbol"
+	echo "    doc         (not implemented) show documentation for package or symbol"
 	echo "    env         print Jmm environment information"
 	echo "    lint        run lint check on package sources"
 	echo "    get         download and install packages and dependencies (currently works with github.com only)"
 	echo "    here        set $JMMPATH to the given directory"
-	echo "    list*       list packages"
+	echo "    list        list packages"
 	echo "    run         compile and run Jmm program (the first file must have the main method)"
 	echo "    test        test packages"
 	echo "    version     print Jmm version"
-	echo
-	echo "    * not implemented"
 	echo
 }
 
@@ -300,6 +298,24 @@ jmm_lint() {
 	java -jar $JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar -c $JMMHOME/lint.xml $files
 }
 
+jmm_list() {
+	for path in $1; do
+		if [[ -d "$path" ]]; then
+			for dir in $path/*; do
+				jmm_list $dir
+			done
+		else
+			if [[ "$path" == *".java" ]]; then
+				for package in $(grep ^package $1); do
+					if [[ "$package" != "package" ]]; then
+						echo "$package"
+					fi
+				done
+			fi
+		fi
+	done
+}
+
 jmm_run() {
 	local jarFile
 	jarFile=$(jmm_helper_build_jar "$@")
@@ -312,8 +328,8 @@ jmm_test() {
 	for path in "$@"; do
 		if [[ -d "$path" ]]; then
 			# if it's a directory recursively find all test files and execute them one at a time.
-			for file in $path/*; do
-				jmm_test $file
+			for dir in $path/*; do
+				jmm_test $dir
 			done
 		elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
 			# if the file ends with "_test.java" then run it.
@@ -350,9 +366,6 @@ jmm() {
 	"env" )
 		jmm_env
 	;;
-	"generate" )
-		echo "TODO"
-	;;
 	"get" )
 		jmm_get "${@:2}"
 	;;
@@ -363,7 +376,7 @@ jmm() {
 		jmm_lint "${@:2}"
 	;;
 	"list" )
-		echo "TODO"
+		jmm_list $2
 	;;
 	"run" )
 		jmm_run "${@:2}"
@@ -371,14 +384,8 @@ jmm() {
 	"test" )
 		jmm_test "${@:2}"
 	;;
-	"tool" )
-		echo "TODO"
-	;;
 	"version" )
 		jmm_version
-	;;
-	"vet" )
-		echo "TODO"
 	;;
 	*)
 		echo "jmm: unknown subcommand \"$1\""
