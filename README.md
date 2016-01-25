@@ -89,6 +89,16 @@ Provide one or more `.java` files to run. The first file must have the main meth
 
 	jmm run ./src/github/com/ricallinson/jmmrun/RunClass.java ./src/github/com/ricallinson/jmmrun/OtherClass.java
 
+### jmm test
+
+Tests in Java-- are identified by the postfix `_test` on a `.java` file. The class must have a main method and be in the same directory as the code it's testing or import the code it's testing. Test files are executed one at time in isolation from each other. All test files are excluded from a build.
+
+	jmm test ./src/github/com/ricallinson/jmmtest/TestClass_test.java
+
+Directories are tested recursively to allow packages to be tested with one command.
+
+	jmm test ./src/github/com/ricallinson/jmmtest
+
 ### jmm version
 
 Prints the version of jmm in use.
