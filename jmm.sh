@@ -105,6 +105,7 @@ jmm_helper_find_src() {
 }
 
 # @String $1 - Directory path
+# @return "/abs/dir/path" || ""
 # Resolves the given directory if it exists.
 jmm_helper_resolve() {
     cd "$1" 2>/dev/null || return $?  # cd to desired directory; if fail, quell any error messages but return exit status
@@ -112,6 +113,9 @@ jmm_helper_resolve() {
     return 0
 }
 
+# @String $1 - File path to a .java with the main method for the .jar
+# @String $@ - List of .java files to put in the .jar
+# @return "path/to.jar" || "compile error"
 jmm_helper_build_jar() {
     local jarName
     local classPath
@@ -139,6 +143,9 @@ jmm_helper_build_jar() {
     return 0
 }
 
+# @String $1 - File path to a .java file
+# @return "list of .java file paths"
+# Looks at the given .java file imports and resolves them to file paths.
 jmm_helper_resolve_imports() {
     local files
     files=""
@@ -163,6 +170,9 @@ jmm_helper_resolve_imports() {
     return 0
 }
 
+# @String $1 - Directory path
+# @return "list of .java file paths"
+# Looks at the given directory path and returns all .java files in it.
 jmm_helper_find_java_files() {
     local files
     files=""
@@ -178,6 +188,9 @@ jmm_helper_find_java_files() {
     return 0
 }
 
+# @String $1 - Path to a Java-- test file.
+# @return "pass" || "fail"
+# Runs the given test file and reports if it passes or fails.
 jmm_run_test() {
     local files
     local dir
