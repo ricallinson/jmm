@@ -123,6 +123,9 @@ Prints the version of jmm in use.
 
 This is the complete list of "legal" Java-- packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
 
+* [java.io.IOException](https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html)
+* [java.io.InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
+* [java.io.OutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html)
 * [java.math](https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)
 
 ## Run Tests

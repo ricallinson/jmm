@@ -25,8 +25,11 @@ export JMMHOME=$JMMHOME
 #
 
 ILLEGAL_PACKAGE="Illegal package"
-LEGAL_PACKAGES=( # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
-    "java.math"  # https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html
+LEGAL_PACKAGES=(           # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
+    "java.io.IOException"  # https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html
+    "java.io.InputStream"  # https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html
+    "java.io.OutputStream" # https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html
+    "java.math"            # https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html
 )
 
 #
