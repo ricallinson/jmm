@@ -25,15 +25,8 @@ export JMMHOME=$JMMHOME
 #
 
 ILLEGAL_PACKAGE="Illegal package"
-LEGAL_PACKAGES=(                # This list is temporary until someone thinks about it
-                                # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
-    "java.io.BufferedReader"    # https://docs.oracle.com/javase/8/docs/api/java/io/BufferedReader.html
-    "java.io.InputStreamReader" # https://docs.oracle.com/javase/8/docs/api/java/io/InputStreamReader.html
-    "java.io.IOException"       # https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html
-    "java.io.PrintWriter"       # https://docs.oracle.com/javase/8/docs/api/java/io/PrintWriter.html
-    "java.net.ServerSocket"     # https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html
-    "java.net.Socket"           # https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html
-    "java.time"                 # https://docs.oracle.com/javase/8/docs/api/java/time/package-summary.html
+LEGAL_PACKAGES=( # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
+    "java.math"  # https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html
 )
 
 #

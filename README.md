@@ -123,7 +123,7 @@ Prints the version of jmm in use.
 
 This is the complete list of "legal" Java-- packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
 
-* Nothing to see here
+* [java.math](https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)
 
 ## Run Tests
 
