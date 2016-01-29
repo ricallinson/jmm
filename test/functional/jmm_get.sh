@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#
+# Copyright 2016, Yahoo Inc.
+# Copyrights licensed under the New BSD License.
+# See the accompanying LICENSE file for terms.
+#
+
 source ../jmm.sh
 packageDir=$JMMPATH/src/github/com/javaminusminus/jmmexample
 if [ -d $packageDir ]; then

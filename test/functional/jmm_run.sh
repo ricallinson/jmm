@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#
+# Copyright 2016, Yahoo Inc.
+# Copyrights licensed under the New BSD License.
+# See the accompanying LICENSE file for terms.
+#
+
 source ../jmm.sh
 data=$(jmm run $JMMPATH/src/github/com/javaminusminus/jmmrun/RunClass.java $JMMPATH/src/github/com/javaminusminus/jmmrun/OtherClass.java)
 if [ "$data" = "Hello world." ]; then

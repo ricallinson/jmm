@@ -1,4 +1,11 @@
 #!/bin/bash
+
+#
+# Copyright 2016, Yahoo Inc.
+# Copyrights licensed under the New BSD License.
+# See the accompanying LICENSE file for terms.
+#
+
 source ../jmm.sh
 data=$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest/TestClass_test.java)
 if [ "$data" != "pass" ]; then

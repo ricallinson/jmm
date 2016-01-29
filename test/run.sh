@@ -1,5 +1,11 @@
 #!/bin/bash
 
+#
+# Copyright 2016, Yahoo Inc.
+# Copyrights licensed under the New BSD License.
+# See the accompanying LICENSE file for terms.
+#
+
 # Set the JMMPATH and current the directory.
 cd "$(dirname "$0")"
 export JMMPATH=$(dirname $(pwd))/examples
