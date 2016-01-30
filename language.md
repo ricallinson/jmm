@@ -46,7 +46,7 @@ An interface __MUST__ contain methods.
 
 ### One Class
 
-Each `.java` file can only have __ONE__ class defined in it.
+There can only be __ONE__ class or interface defined per `.java` file.
 
 ### ArrayTrailingComma
 
@@ -92,22 +92,34 @@ All `.java` files __MUST__ have a package declaration and the package name __MUS
 
 References to instance variables and methods of the present object __MUST__ take the form `this.varName` or `this.methodName(args)`.
 
-### StringLiteralEquality
+### Static Import
 
-### AvoidStaticImport
+Static import statements are __NOT__ allowed.
 
-### AvoidStarImport
+### Star Import
 
-### RedundantImport
+Star import statements are __NOT__ allowed.
+
+### Redundant Import
+
+Imports from the same package or `java.lang` are not __NOT__ allowed.
 
 ### UnusedImports
 
+Imports that are unused are __NOT__ allowed.
+
 ### Indentation
+
+Indentation __MUST__ be four spaces.
 
 ### OuterTypeFilename
 
+The class or interface name __MUST__ be the same as the file name.
+
 ### RedundantModifier
 
-### OuterTypeNumber
+Modifiers that are redundant are __NOT__ allowed.
 
-### NewlineAtEndOfFile
+### End of File
+
+All files __MUST__ end with a new line.
