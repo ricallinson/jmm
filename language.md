@@ -90,7 +90,7 @@ All `.java` files __MUST__ have a package declaration and the package name __MUS
 
 ### This
 
-References to instance variables and methods of the present object _MUST__ take the form `this.varName` or `this.methodName(args)`.
+References to instance variables and methods of the present object __MUST__ take the form `this.varName` or `this.methodName(args)`.
 
 ### StringLiteralEquality
 
