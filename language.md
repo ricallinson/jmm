@@ -20,7 +20,7 @@ The use of `@annotations` are __NOT__ allowed.
 
 ### Inner Classes
 
-The use of inner classeses is __NOT__ allowed.
+The use of inner classes is __NOT__ allowed.
 
 ### In-line Conditionals
 
