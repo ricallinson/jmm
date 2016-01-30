@@ -26,6 +26,14 @@ The use of inner classes are __NOT__ allowed.
 
 The use of in-line conditionals is __NOT__ allowed.
 
+### Static Import
+
+Static import statements are __NOT__ allowed.
+
+### Star Import
+
+Star import statements are __NOT__ allowed.
+
 ## Style
 
 ### Cyclomatic Complexity
@@ -91,14 +99,6 @@ All `.java` files __MUST__ have a package declaration and the package name __MUS
 ### This
 
 References to instance variables and methods of the present object __MUST__ take the form `this.varName` or `this.methodName(args)`.
-
-### Static Import
-
-Static import statements are __NOT__ allowed.
-
-### Star Import
-
-Star import statements are __NOT__ allowed.
 
 ### Redundant Import
 
