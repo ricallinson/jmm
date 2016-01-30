@@ -52,6 +52,7 @@
         <module name="AnonInnerLength">
             <property name="max" value="0"/>
         </module>
+        <module name="AvoidStarImport"/>
     </module>
     <module name="NewlineAtEndOfFile"/>
 </module>

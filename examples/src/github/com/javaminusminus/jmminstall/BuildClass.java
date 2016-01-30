@@ -6,7 +6,7 @@
 
 package github.com.javaminusminus.jmminstall;
 
-import github.com.javaminusminus.jmminstall.sub.*;
+import github.com.javaminusminus.jmminstall.sub.OtherClass;
 
 public class BuildClass {  
     public static void main(String args[]) {
