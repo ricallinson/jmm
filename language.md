@@ -1,26 +1,44 @@
 # Java-- Language Spec
 
-## Removed
+## Language Restrictions
 
 ### abstract
 
+The use of the `abstract` keyword is __NOT__ allowed.
+
 ### private
 
-### annotations
+The use of the `private` keyword is __NOT__ allowed.
 
 ### throws
 
-### Inner Classes (AnonInnerLength)
+The use of the `throws` keyword is __NOT__ allowed.
 
-### In-line Conditionals (AvoidInlineConditionals)
+### annotations
+
+The use of `@annotations` are __NOT__ allowed.
+
+### Inner Classes
+
+The use of inner classeses is __NOT__ allowed.
+
+### In-line Conditionals
+
+The use of in-line conditionals is __NOT__ allowed.
 
 ## Style
 
-### CyclomaticComplexity
+### Cyclomatic Complexity
 
-### AvoidNestedBlocks
+Cyclomatic Complexity can be no higher than 8.
 
-### EmptyBlock
+### No Nested Blocks
+
+Nested blocks are __NOT__ allowed.
+
+### Empty Block
+
+Empty blocks are __NOT__ allowed.
 
 ### InterfaceIsType
 
