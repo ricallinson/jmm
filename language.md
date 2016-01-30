@@ -40,31 +40,57 @@ Nested blocks are __NOT__ allowed.
 
 Empty blocks are __NOT__ allowed.
 
-### InterfaceIsType
+### Interface
 
-### OneTopLevelClass
+An interface __MUST__ contain methods.
+
+### One Class
+
+Each `.java` file can only have __ONE__ class defined in it.
 
 ### ArrayTrailingComma
 
-### EmptyStatement
+Array initialization __MUST__ have a trailing comma.
 
-### EqualsAvoidNull
+### Empty Statement
 
-### IllegalCatch
+Empty Statements are __NOT__ allowed.
 
-### IllegalThrows
+### String Equals
 
-### InnerAssignment
+Calling the `equals()` method on String literals is __REQUIRED__ for comparasons.
 
-### MultipleVariableDeclarations
+### Catch Blocks
 
-### OneStatementPerLine
+Catch blocks are __NOT__ allowed to trap the following `java.lang.Exception`, `java.lang.Throwable`, `java.lang.RuntimeException`.
 
-### OverloadMethodsDeclarationOrder
+### Throw
+
+Declaring that a methods that throw either `java.lang.Throwable`, `java.lang.Error` or `java.lang.RuntimeException` is __NOT__ allowed.
+
+### Inner Assignment
+
+InnerAssignment is __NOT__ allowed.
+
+### Multiple Variable Declarations
+
+Multiple variable declarations are __NOT__ allowed.
+
+### One Statement Per Line
+
+The can be only __ONE__ statment per line.
+
+### Overloaded Methods
+
+Overloaded methods __MUST__ be defined together.
 
 ### PackageDeclaration
 
-### RequireThis
+All `.java` files __MUST__ have a package declaration and the package name __MUST__ match the directory name for the source file.
+
+### This
+
+References to instance variables and methods of the present object _MUST__ take the form `this.varName` or `this.methodName(args)`.
 
 ### StringLiteralEquality
 
