@@ -7,19 +7,21 @@
 #
 
 source ../jmm.sh
-data=$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest/TestClass_test.java)
-if [ "$data" != "pass" ]; then
+$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest/TestClass_test.java)
+if [[ $? -gt 0 ]]; then
+	echo $?
 	echo "Test failed !pass."
 	exit 1
 fi
-data=$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest/sub/SubTestClass_test.java)
-if [ "$data" != "fail" ]; then
-	echo $data
+$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest/sub/SubTestClass_test.java)
+if [[ $? -eq 0 ]]; then
+	echo $?
 	echo "Test failed !fail."
 	exit 1
 fi
-data=$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest)
-if [[ "$data" != *"pass"* ]] && [[ "$data" != *"fail"* ]]; then
+$(jmm test $JMMPATH/src/github/com/javaminusminus/jmmtest)
+if [[ $? -gt 1 ]]; then
+	echo $?
 	echo "Test failed !pass and !fail."
 	exit 1
 fi

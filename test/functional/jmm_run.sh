@@ -11,5 +11,5 @@ data=$(jmm run $JMMPATH/src/github/com/javaminusminus/jmmrun/RunClass.java $JMMP
 if [ "$data" = "Hello world." ]; then
 	exit 0
 fi
-echo "Jar did not output 'Hello world'."
+echo "Jar did not output 'Hello world': $data"
 exit 1

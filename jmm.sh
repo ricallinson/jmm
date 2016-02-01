@@ -176,12 +176,12 @@ jmm_helper_find_java_files() {
 
 # Creates a new imported.txt file.
 jmm_start_import_check() {
-    echo "" > $JMMPATH/imported.txt
+    echo "" > "$JMMPATH/imported.txt"
 }
 
 # Removes an imported.txt file.
 jmm_end_import_check() {
-    rm $JMMPATH/imported.txt
+    rm "$JMMPATH/imported.txt" > /dev/null
 }
 
 # @String $1 - Java import package name
@@ -235,6 +235,7 @@ jmm_helper_resolve_imports() {
 jmm_run_test() {
     local files
     local dir
+    jmm_start_import_check
     # get all the files used in the imports.
     files="$1 $(jmm_helper_resolve_imports "$1")"
     # get all the files in the same directory.
@@ -243,14 +244,10 @@ jmm_run_test() {
             files="$files $file $(jmm_helper_resolve_imports "$file")"
         fi 
     done
+    jmm_end_import_check
     # run the test.
     jmm_run $files
-    if [[ $? -eq 0 ]]; then
-        # echo "pass"
-        return 0
-    fi
-    # echo "fail"
-    return 1
+    return $?
 }
 
 #
@@ -462,29 +459,22 @@ jmm_run() {
 # Runs the tests for the given or found files.
 jmm_test() {
     local failures
-    jmm_start_import_check
+    failures=$((0))
     jmm_lint "$@"
-    if [[ $? -gt 0 ]]; then
-        failures=$(($failures + $?))
-    fi
+    failures=$(($failures + $?))
     for path in "$@"; do
         if [[ -d "$path" ]]; then
             # if it's a directory recursively find all test files and execute them one at a time.
             for dir in $path/*; do
                 jmm_test "$dir"
-                if [[ $? -gt 0 ]]; then
-                    failures=$(($failures + $?))
-                fi
+                failures=$(($failures + $?))
             done
         elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
             # if the file ends with "_test.java" then run it.
             jmm_run_test "$path"
-            if [[ $? -gt 0 ]]; then
-                failures=$(($failures + $?))
-            fi
+            failures=$(($failures + $?))
         fi
     done
-    jmm_end_import_check
     return $(($failures))
 }
 
