@@ -241,10 +241,10 @@ jmm_run_test() {
     # run the test.
     jmm_run $files
     if [[ $? -eq 0 ]]; then
-        echo "pass"
+        # echo "pass"
         return 0
     fi
-    echo "fail"
+    # echo "fail"
     return 1
 }
 
@@ -456,24 +456,31 @@ jmm_run() {
 # @String $@ - Directory or file path(s) to &_test.java files
 # Runs the tests for the given or found files.
 jmm_test() {
+    local failures
     jmm_start_import_check
     jmm_lint "$@"
     if [[ $? -gt 0 ]]; then
-        return 1
+        failures=$(($failures + $?))
     fi
     for path in "$@"; do
         if [[ -d "$path" ]]; then
             # if it's a directory recursively find all test files and execute them one at a time.
             for dir in $path/*; do
                 jmm_test "$dir"
+                if [[ $? -gt 0 ]]; then
+                    failures=$(($failures + $?))
+                fi
             done
         elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
             # if the file ends with "_test.java" then run it.
             jmm_run_test "$path"
+            if [[ $? -gt 0 ]]; then
+                failures=$(($failures + $?))
+            fi
         fi
     done
     jmm_end_import_check
-    return 0
+    return $(($failures))
 }
 
 # Prints the current version of this tool.
