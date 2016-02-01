@@ -30,6 +30,8 @@
             <property name="tokens" value="ABSTRACT"/>
             <property name="tokens" value="LITERAL_PRIVATE"/>
             <property name="tokens" value="LITERAL_THROWS"/>
+            <property name="tokens" value="GENERIC_END"/>
+            <property name="tokens" value="GENERIC_START"/>
         </module>
         <module name="InnerAssignment"/>
         <!-- <module name="MultipleStringLiterals"/> -->

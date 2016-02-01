@@ -18,6 +18,10 @@ The use of the `throws` keyword is __NOT__ allowed.
 
 The use of `@annotations` are __NOT__ allowed.
 
+### Generics
+
+The use of generics is __NOT__ allowed.
+
 ### Inner Classes
 
 The use of inner classes are __NOT__ allowed.
