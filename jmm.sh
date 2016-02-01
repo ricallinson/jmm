@@ -156,33 +156,6 @@ jmm_helper_build_jar() {
     return 0
 }
 
-# @String $1 - File path to a .java file
-# @return "list of .java file paths"
-# Looks at the given .java file imports and resolves them to file paths.
-jmm_helper_resolve_imports() {
-    local files
-    files=""
-    for import in $(grep ^import "$1"); do
-        if [ "$import" != "import" ] && [ -n "$import" ]; then
-            if [ "${import:0:4}" == "java" ] && [ "$(jmm_package_allowed "$import")" == "false" ]; then
-                echo "$ILLEGAL_PACKAGE: $import"
-                return
-            elif [ "${import:0:4}" != "java" ]; then
-                import=${import//[\.]/\/}
-                import=$(dirname "$import")
-                newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
-                if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
-                    echo "$newFiles"
-                    return
-                fi
-                files="$files $newFiles"
-            fi
-        fi
-    done
-    echo "$files"
-    return 0
-}
-
 # @String $1 - Directory path
 # @return "list of .java file paths"
 # Looks at the given directory path and returns all .java files in it.
@@ -196,6 +169,56 @@ jmm_helper_find_java_files() {
             return
         fi
         files="$files $file $imports"
+    done
+    echo "$files"
+    return 0
+}
+
+jmm_start_import_check() {
+    echo "" > $JMMPATH/imported.txt
+}
+
+jmm_end_import_check() {
+    rm $JMMPATH/imported.txt
+}
+
+jmm_helper_import_check() {
+    local imported
+    read -r -a imported < $JMMPATH/imported.txt
+    for import in "${imported[@]}"; do
+        if [[ "$1" == "$import" ]]; then
+            echo "skip"
+            return 1
+        fi
+    done
+    imported+=("$1")
+    echo "${imported[@]}" > $JMMPATH/imported.txt
+    echo "import"
+    return 0
+}
+
+# @String $1 - File path to a .java file
+# @return "list of .java file paths"
+# Looks at the given .java file imports and resolves them to file paths.
+jmm_helper_resolve_imports() {
+    local files
+    files=""
+    for import in $(grep ^import "$1"); do
+        if [[ "$import" != "import" ]] && [[ -n "$import" ]] && [[ "$(jmm_helper_import_check "$import")" == "import" ]]; then
+            if [[ "${import:0:4}" == "java" ]] && [[ "$(jmm_package_allowed "$import")" == "false" ]]; then
+                echo "$ILLEGAL_PACKAGE: $import"
+                return
+            elif [[ "${import:0:4}" != "java" ]]; then
+                import=${import//[\.]/\/}
+                import=$(dirname "$import")
+                newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
+                if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
+                    echo "$newFiles"
+                    return
+                fi
+                files="$files $newFiles"
+            fi
+        fi
     done
     echo "$files"
     return 0
@@ -244,6 +267,7 @@ jmm_install() {
     if [[ -z "$path" ]]; then
         path="."
     fi
+    jmm_start_import_check
     jmm_lint $path
     if [[ $? -gt 0 ]]; then
         return 1
@@ -275,6 +299,7 @@ jmm_install() {
     exe=${jar:0:${#jar}-4}
     echo "java -jar $jar" > "$exe"
     chmod +x "$exe"
+    jmm_end_import_check
     return 0
 }
 
@@ -431,6 +456,7 @@ jmm_run() {
 # @String $@ - Directory or file path(s) to &_test.java files
 # Runs the tests for the given or found files.
 jmm_test() {
+    jmm_start_import_check
     jmm_lint "$@"
     if [[ $? -gt 0 ]]; then
         return 1
@@ -446,6 +472,7 @@ jmm_test() {
             jmm_run_test "$path"
         fi
     done
+    jmm_end_import_check
     return 0
 }
 
