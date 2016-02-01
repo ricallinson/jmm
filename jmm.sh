@@ -174,14 +174,19 @@ jmm_helper_find_java_files() {
     return 0
 }
 
+# Creates a new imported.txt file.
 jmm_start_import_check() {
     echo "" > $JMMPATH/imported.txt
 }
 
+# Removes an imported.txt file.
 jmm_end_import_check() {
     rm $JMMPATH/imported.txt
 }
 
+# @String $1 - Java import package name
+# @return "skip" || "import"
+# Checks if the given package name has already been imported.
 jmm_helper_import_check() {
     local imported
     read -r -a imported < $JMMPATH/imported.txt
