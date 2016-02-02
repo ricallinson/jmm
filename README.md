@@ -132,6 +132,8 @@ This is the complete list of "legal" Java-- packages allowed from the [Java 8](h
 * [java.math](https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)
 * [java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
 * [java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
+* [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
+* [java.util.regex.Matcher](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
 
 ## Run Tests
 
