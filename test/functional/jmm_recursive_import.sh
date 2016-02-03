@@ -7,7 +7,7 @@
 #
 
 source ../jmm.sh
-jmm install $JMMPATH/src/github/com/javaminusminus/jmmrecursiveimport
+jmm install $JMMPATH/src/github/com/jminusminus/jmmrecursiveimport
 data=$(jmmrecursiveimport)
 if [ "$data" == "Hello world" ]; then
 	exit 0

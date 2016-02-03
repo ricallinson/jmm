@@ -38,7 +38,7 @@ LEGAL_PACKAGES=(              # https://docs.oracle.com/javase/8/docs/api/overvi
 
 # @String $1 - Java import path
 # @return "false" || ""
-# Checks an import against the legal Java-- packages.
+# Checks an import against the legal Jmm packages.
 jmm_package_allowed() {
     if [[ "$1" == "java."* ]]; then
         for package in "${LEGAL_PACKAGES[@]}"; do
@@ -231,7 +231,7 @@ jmm_helper_resolve_imports() {
     return 0
 }
 
-# @String $1 - Path to a Java-- test file.
+# @String $1 - Path to a Jmm test file.
 # @return "pass" || "fail"
 # Runs the given test file and reports if it passes or fails.
 jmm_run_test() {
@@ -314,7 +314,7 @@ jmm_clean() {
     return 0
 }
 
-# Prints the exported variables used by Java--.
+# Prints the exported variables used by Jmm.
 jmm_env() {
     echo "JMMPATH=\"$JMMPATH\""
     echo "JMMHOME=\"$JMMHOME\""
@@ -350,9 +350,9 @@ jmm_get() {
 
 # Prints the available commands.
 jmm_help() {
-    echo "Jmm is a tool for managing Java-- source code."
+    echo "Jmm is a tool for managing Jmm source code."
     echo
-    echo "Java--"
+    echo "Jmm"
     echo
     echo "Usage:"
     echo
@@ -399,7 +399,7 @@ jmv_here() {
     export PATH=$PATH:$JMMPATH/bin
 
     echo
-    echo "Java-- workspace set to: $JMMPATH"
+    echo "Jmm workspace set to: $JMMPATH"
     echo
 
     return 0
@@ -516,7 +516,7 @@ jmm() {
 
     if [[ -z "$JMMPATH" ]]; then
         echo
-        echo "You must be in a Java-- workspace to use '$1'."
+        echo "You must be in a Jmm workspace to use '$1'."
         echo
         return
     fi

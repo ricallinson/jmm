@@ -11,14 +11,14 @@ source ../jmm.sh
 mkdir ./jmmtest
 cd ./jmmtest
 jmm here .
-jmm get github.com/javaminusminus/jmmexample
-jmm get github.com/javaminusminus/simplebdd
-jmm install ./src/github/com/javaminusminus/jmmexample
+jmm get github.com/jminusminus/jmmexample
+jmm get github.com/jminusminus/simplebdd
+jmm install ./src/github/com/jminusminus/jmmexample
 data=$(jmmexample)
 cd ..
 rm -rf ./jmmtest
 
-if [ "$data" = "Congratulations on your first Java-- application." ]; then
+if [ "$data" = "Congratulations on your first Jmm application." ]; then
 	exit 0
 fi
 echo "Failed to complete the example."

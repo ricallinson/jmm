@@ -4,9 +4,9 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmimport;
+package github.com.jminusminus.jmmimport;
 
-import github.com.javaminusminus.jmminstall.sub.OtherClass;
+import github.com.jminusminus.jmminstall.sub.OtherClass;
 
 class ImportClass {  
     public static void main(String args[]) {

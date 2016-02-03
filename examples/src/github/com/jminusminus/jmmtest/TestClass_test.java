@@ -4,12 +4,11 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmillegal;
+package github.com.jminusminus.jmmtest;
 
-import java.util.Date;
-
-class IllegalClass {  
+class TestClass_test {  
     public static void main(String args[]) {
-        Date d = new Date();
+        TestClass test = new TestClass();
+        System.exit(0);
     }
 }

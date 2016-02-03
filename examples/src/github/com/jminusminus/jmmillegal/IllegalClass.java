@@ -4,11 +4,12 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmrun;
+package github.com.jminusminus.jmmillegal;
 
-class RunClass {  
+import java.util.Date;
+
+class IllegalClass {  
     public static void main(String args[]) {
-        OtherClass c = new OtherClass();
-        System.out.println(c.msg());
+        Date d = new Date();
     }
 }

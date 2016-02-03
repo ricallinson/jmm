@@ -4,9 +4,9 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmrecursiveimport.sub;
+package github.com.jminusminus.jmmrecursiveimport.sub;
 
-import github.com.javaminusminus.jmmrecursiveimport.FirstClass;
+import github.com.jminusminus.jmmrecursiveimport.FirstClass;
 
 public class SecondClass {  
     

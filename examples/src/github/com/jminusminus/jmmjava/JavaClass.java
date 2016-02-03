@@ -4,11 +4,13 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmtest;
+package github.com.jminusminus.jmmjava;
 
-class TestClass_test {  
+import java.math.BigInteger;
+
+public class JavaClass {  
     public static void main(String args[]) {
-        TestClass test = new TestClass();
-        System.exit(0);
+    	BigInteger b = new BigInteger("101");
+        System.out.println(b);
     }
 }

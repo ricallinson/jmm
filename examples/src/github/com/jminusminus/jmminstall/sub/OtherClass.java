@@ -4,9 +4,9 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmrun;
+package github.com.jminusminus.jmminstall.sub;
 
-class OtherClass {  
+public class OtherClass {  
     public String msg() {
         return "Hello world.";
     }

@@ -1,4 +1,4 @@
-# Java-- Language Spec
+# Jmm Language Spec
 
 ## Language Restrictions
 

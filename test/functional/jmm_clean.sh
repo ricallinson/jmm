@@ -7,7 +7,7 @@
 #
 
 source ../jmm.sh
-jmm install $JMMPATH/src/github/com/javaminusminus/jmminstall
+jmm install $JMMPATH/src/github/com/jminusminus/jmminstall
 jmm clean
 if [ -e "$JMMPATH/bin/jmminstall" ]; then
 	echo "Jar 'jmminstall.jar' did not get removed."

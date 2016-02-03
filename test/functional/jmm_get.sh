@@ -7,11 +7,11 @@
 #
 
 source ../jmm.sh
-packageDir=$JMMPATH/src/github/com/javaminusminus/jmmexample
+packageDir=$JMMPATH/src/github/com/jminusminus/jmmexample
 if [ -d $packageDir ]; then
 	rm -rf $packageDir
 fi
-jmm get github.com/javaminusminus/jmmexample
+jmm get github.com/jminusminus/jmmexample
 if [ ! -d $packageDir ]; then
 	echo "Package was not downloaded."
 	exit 1

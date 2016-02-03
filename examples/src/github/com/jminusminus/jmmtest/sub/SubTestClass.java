@@ -4,7 +4,7 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmmtest.sub;
+package github.com.jminusminus.jmmtest.sub;
 
 class SubTestClass {
 

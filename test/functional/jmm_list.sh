@@ -7,13 +7,13 @@
 #
 
 source ../jmm.sh
-data=$(jmm list $JMMPATH/src/github/com/javaminusminus/jmminstall)
-if [[ "$data" != *"github.com.javaminusminus.jmminstall"* ]] && [[ "$data" != *"github.com.javaminusminus.jmminstall.sub"* ]]; then
+data=$(jmm list $JMMPATH/src/github/com/jminusminus/jmminstall)
+if [[ "$data" != *"github.com.jminusminus.jmminstall"* ]] && [[ "$data" != *"github.com.jminusminus.jmminstall.sub"* ]]; then
 	echo "Test did not execute."
 	exit 1
 fi
-data=$(jmm list $JMMPATH/src/github/com/javaminusminus/jmminstall/BuildClass.java)
-if [[ "$data" != "github.com.javaminusminus.jmminstall"* ]]; then
+data=$(jmm list $JMMPATH/src/github/com/jminusminus/jmminstall/BuildClass.java)
+if [[ "$data" != "github.com.jminusminus.jmminstall"* ]]; then
 	echo "Test did not execute."
 	exit 1
 fi

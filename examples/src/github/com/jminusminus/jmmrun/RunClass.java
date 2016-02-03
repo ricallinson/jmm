@@ -4,11 +4,9 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.javaminusminus.jmminstall;
+package github.com.jminusminus.jmmrun;
 
-import github.com.javaminusminus.jmminstall.sub.OtherClass;
-
-public class BuildClass {  
+class RunClass {  
     public static void main(String args[]) {
         OtherClass c = new OtherClass();
         System.out.println(c.msg());

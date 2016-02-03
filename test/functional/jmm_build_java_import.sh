@@ -7,7 +7,7 @@
 #
 
 source ../jmm.sh
-jmm install $JMMPATH/src/github/com/javaminusminus/jmmjava
+jmm install $JMMPATH/src/github/com/jminusminus/jmmjava
 data=$(jmmjava)
 if [ "$data" == "101" ]; then
 	exit 0
