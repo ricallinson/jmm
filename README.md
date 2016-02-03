@@ -4,7 +4,7 @@
 
 __UNSTABLE: This project is currently under development and will change.__
 
-This project started life as a joke after having coffee with a fellow engineer. Jmm is taking Java in a different direction by using highly opinionated choices as to what should or should not be used from the language. Jmm is not a new language, it's just a collection of tools and libraries that let you work with Java in a different way. For more information about the [Jmm Language](https://github.com/jminusminus/jmm/blob/master/language.md) choices.
+This project started life as a joke after having coffee with a fellow engineer. Jmm is taking Java in a different direction by using highly opinionated choices as to what should or should not be used from the language. Jmm is not a new language, it's just a collection of tools and libraries that let you work with Java in a different way. See more information about the [Jmm Language](https://github.com/jminusminus/jmm/blob/master/language.md) choices.
 
 ## Install
 
