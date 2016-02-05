@@ -19,18 +19,7 @@ export JMMHOME=$JMMHOME
 #
 
 ILLEGAL_PACKAGE="Illegal package"
-LEGAL_PACKAGES=(              # https://docs.oracle.com/javase/8/docs/api/overview-summary.html
-    "java.io.IOException"     # https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html
-    "java.io.InputStream"     # https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html
-    "java.io.OutputStream"    # https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html
-    "java.math"               # https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html
-    "java.net.ServerSocket"   # https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html
-    "java.net.Socket"         # https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html
-    "java.lang.reflect.Method"
-    "java.lang.reflect.InvocationTargetException"
-    "java.util.regex.Pattern" # https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
-    "java.util.regex.Matcher" # https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html
-)
+read -r -a LEGAL_PACKAGES < $JMMHOME/packages.txt
 
 #
 # Helper functions
