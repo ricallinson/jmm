@@ -205,6 +205,7 @@ jmm_helper_resolve_imports() {
                 echo "$ILLEGAL_PACKAGE: $import"
                 return
             elif [[ "${import:0:4}" != "java" ]]; then
+                import=${import//[;]/}
                 import=${import//[\.]/\/}
                 import=$(dirname "$import")
                 newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
@@ -425,7 +426,10 @@ jmm_list() {
         if [[ "$path" == *".java" ]]; then
             for package in $(grep ^package "$1"); do
                 if [[ "$package" != "package" ]]; then
-                    echo "$package"
+                    package=${package//[;]/}
+                    if [[ "$(jmm_helper_import_check "$package")" == "import" ]]; then
+                        echo "$package"
+                    fi
                 fi
             done
         fi
@@ -527,7 +531,9 @@ jmm() {
         jmm_lint "${@:2}"
     ;;
     "list" )
+        jmm_start_import_check
         jmm_list "$2"
+        jmm_end_import_check
     ;;
     "run" )
         jmm_run "${@:2}"
