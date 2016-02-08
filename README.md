@@ -122,19 +122,6 @@ Prints the version of jmm in use.
 
 	jmm version
 
-## Legal Packages
-
-This is the complete list of "legal" Jmm packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
-
-* [java.io.IOException](https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html)
-* [java.io.InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
-* [java.io.OutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html)
-* [java.math](https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)
-* [java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
-* [java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
-* [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
-* [java.util.regex.Matcher](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
-
 ## Run Tests
 
 Tests to validate everything is working as expected.

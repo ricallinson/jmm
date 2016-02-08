@@ -127,3 +127,18 @@ Modifiers that are redundant are __NOT__ allowed.
 ### End of File
 
 All files __MUST__ end with a new line.
+
+## Legal Packages
+
+__Note: All package maybe blocked and require direct referancing if they are to be used.__
+
+This is the complete list of "legal" Jmm packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
+
+* [java.io.IOException](https://docs.oracle.com/javase/8/docs/api/java/io/IOException.html)
+* [java.io.InputStream](https://docs.oracle.com/javase/8/docs/api/java/io/InputStream.html)
+* [java.io.OutputStream](https://docs.oracle.com/javase/8/docs/api/java/io/OutputStream.html)
+* [java.math](https://docs.oracle.com/javase/8/docs/api/java/math/MathContext.html)
+* [java.net.ServerSocket](https://docs.oracle.com/javase/8/docs/api/java/net/ServerSocket.html)
+* [java.net.Socket](https://docs.oracle.com/javase/8/docs/api/java/net/Socket.html)
+* [java.util.regex.Pattern](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
+* [java.util.regex.Matcher](https://docs.oracle.com/javase/8/docs/api/java/util/regex/Pattern.html)
