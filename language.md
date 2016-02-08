@@ -130,7 +130,7 @@ All files __MUST__ end with a new line.
 
 ## Legal Packages
 
-__Note: All package maybe blocked and require direct referancing if they are to be used.__
+__Note: All package maybe blocked and require direct referencing if they are to be used.__
 
 This is the complete list of "legal" Jmm packages allowed from the [Java 8](https://docs.oracle.com/javase/8/docs/api/overview-summary.html) package list. Note: The opinionated package list is not complete yet.
 
