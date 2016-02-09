@@ -122,6 +122,7 @@ jmm_helper_build_jar() {
     done
     javac -d "$JMMPATH/pkg" "${classFiles[@]}"
     if [[ $? -eq 1 ]]; then
+        echo "javac -d $JMMPATH/pkg ${classFiles[@]}"
         return 1
     fi
     jar cfe "$JMMPATH/bin/$jarName.jar" "$classPath" $classPaths
@@ -137,10 +138,6 @@ jmm_helper_find_java_files() {
     files=""
     for file in $(find "$1" -name "*.java"); do
         imports=$(jmm_helper_resolve_imports "$file")
-        if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
-            echo "$imports"
-            return
-        fi
         files="$files $file $imports"
     done
     echo "$files"
@@ -180,6 +177,7 @@ jmm_helper_import_check() {
 # Looks at the given .java file imports and resolves them to file paths.
 jmm_helper_resolve_imports() {
     local files
+    local import
     files=""
     for import in $(grep ^import "$1"); do
         if [[ "$import" != "import" ]] && [[ -n "$import" ]] && [[ "$(jmm_helper_import_check "$import")" == "import" ]]; then
@@ -252,8 +250,9 @@ jmm_install() {
         fi
     done
     jar=$(jmm_helper_build_jar $mains $files)
-    if [[ "$jar" == "" ]]; then
-        return
+    if [[ $? -eq 1 ]]; then
+        echo $jar
+        return 1
     fi
     exe=${jar:0:${#jar}-4}
     echo "java -jar $jar" > "$exe"
