@@ -45,6 +45,14 @@ This example creates a Jmm workspace, gets the source code for a package, instal
     jmm install ./src/github/com/jminusminus/jmmexample
     jmmexample
 
+### What's Different?
+
+The main departure from standard Java development is that all source code is contained in one __workspace__ directory. There are no extra class paths, no external `.jar` files and no version conflicts. To achieve this all packages are relative to a __workspace__ directory. For example the Java package `github.com.jminusminus.jmmexample` would be found in the directory`$JMMPATH/github/com/jminusminus/jmmexample` where `$JMMPATH` is the __workspace__ directory.
+
+Maven, Gradle, Ant etc will not work with Jmm by design. Like [Go](https://golang.org/) there is no packaging system as such. All Java packages are pulled from source control systems like [github.com](https://github.com/) as source code. All dependences for a program must be in a projects workspace are compiled into one `.jar`. Each project has it's own workspace with it's own dependencies. The dependencies are defined in code as `import` statements so no external dependency management system is required.
+
+
+
 ## Help
 
 ### jmm clean
