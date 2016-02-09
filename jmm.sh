@@ -187,10 +187,6 @@ jmm_helper_resolve_imports() {
             import=${import//[\.]/\/}
             import=$(dirname "$import")
             newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
-            if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
-                echo "$newFiles"
-                return
-            fi
             files="$files $newFiles"
         fi
     done
@@ -249,22 +245,14 @@ jmm_install() {
     for file in $(find "$path" -name '*.java'); do
         if [ "$mains" = "" ] && grep -q "public static void main(" "$file"; then
             imports=$(jmm_helper_resolve_imports "$file")
-            if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
-                echo "$imports"
-                return
-            fi
             mains="$file $imports"
         else
             imports=$(jmm_helper_resolve_imports "$file")
-            if [[ "$imports" == "$ILLEGAL_PACKAGE"* ]]; then
-                echo "$imports"
-                return
-            fi
             files="$files $file $imports"
         fi
     done
     jar=$(jmm_helper_build_jar $mains $files)
-    if [[ "$jar" = "" ]]; then
+    if [[ "$jar" == "" ]]; then
         return
     fi
     exe=${jar:0:${#jar}-4}
