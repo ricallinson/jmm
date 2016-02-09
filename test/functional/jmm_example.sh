@@ -22,4 +22,5 @@ if [ "$data" = "Congratulations on your first Jmm application." ]; then
 	exit 0
 fi
 echo "Failed to complete the example."
+echo "$data"
 exit 1
