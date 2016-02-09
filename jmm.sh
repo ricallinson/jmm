@@ -10,35 +10,17 @@
 
 { # this ensures the entire script is downloaded 
 
+#
+# Constants
+#
+
 export JMMVERSION="0.0.1"
 JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 export JMMHOME=$JMMHOME
 
 #
-# Constants
-#
-
-ILLEGAL_PACKAGE="Illegal package"
-read -r -a LEGAL_PACKAGES < $JMMHOME/packages.txt
-
-#
 # Helper functions
 #
-
-# @String $1 - Java import path
-# @return "false" || ""
-# Checks an import against the legal Jmm packages.
-jmm_package_allowed() {
-    if [[ "$1" == "java."* ]]; then
-        for package in "${LEGAL_PACKAGES[@]}"; do
-            if [[ "$1" == "$package"* ]]; then
-                return 0
-            fi
-        done
-    fi
-    echo "false"
-    return 1
-}
 
 # @String $1 - Directory path
 # @return "dir/path"
@@ -201,20 +183,15 @@ jmm_helper_resolve_imports() {
     files=""
     for import in $(grep ^import "$1"); do
         if [[ "$import" != "import" ]] && [[ -n "$import" ]] && [[ "$(jmm_helper_import_check "$import")" == "import" ]]; then
-            if [[ "${import:0:4}" == "java" ]] && [[ "$(jmm_package_allowed "$import")" == "false" ]]; then
-                echo "$ILLEGAL_PACKAGE: $import"
+            import=${import//[;]/}
+            import=${import//[\.]/\/}
+            import=$(dirname "$import")
+            newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
+            if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
+                echo "$newFiles"
                 return
-            elif [[ "${import:0:4}" != "java" ]]; then
-                import=${import//[;]/}
-                import=${import//[\.]/\/}
-                import=$(dirname "$import")
-                newFiles=$(jmm_helper_find_java_files "$JMMPATH/src/$import")
-                if [[ "$newFiles" == "$ILLEGAL_PACKAGE"* ]]; then
-                    echo "$newFiles"
-                    return
-                fi
-                files="$files $newFiles"
             fi
+            files="$files $newFiles"
         fi
     done
     echo "$files"
