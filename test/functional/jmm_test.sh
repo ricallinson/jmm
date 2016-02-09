@@ -22,7 +22,14 @@ fi
 $(jmm test $JMMPATH/src/github/com/jminusminus/jmmtest)
 if [[ $? -gt 1 ]]; then
 	echo $?
-	echo "Test failed !pass and !fail."
+	echo "Test failed !pass and !fail without slash."
+	exit 1
+fi
+exit 0
+$(jmm test $JMMPATH/src/github/com/jminusminus/jmmtest/)
+if [[ $? -gt 1 ]]; then
+	echo $?
+	echo "Test failed !pass and !fail with slash."
 	exit 1
 fi
 exit 0

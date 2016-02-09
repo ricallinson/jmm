@@ -9,8 +9,15 @@
 source ../jmm.sh
 jmm install $JMMPATH/src/github/com/jminusminus/jmminstall
 data=$(jmminstall)
-if [ "$data" = "Hello world." ]; then
-	exit 0
+if [[ "$data" != "Hello world." ]]; then
+	echo "Jar 'jmminstall' did not execute without slash."
+	exit 1
 fi
-echo "Jar 'jmminstall' did not execute."
-exit 1
+
+jmm install $JMMPATH/src/github/com/jminusminus/jmminstall/
+data=$(jmminstall)
+if [[ "$data" != "Hello world." ]]; then
+	echo "Jar 'jmminstall' did not execute with slash."
+	exit 1
+fi
+exit 0

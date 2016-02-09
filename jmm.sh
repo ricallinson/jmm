@@ -237,7 +237,7 @@ jmm_install() {
     if [[ $? -gt 0 ]]; then
         return 1
     fi
-    path=$(jmm_helper_path_resolve "$path") # TODO: strip last / if it's there.
+    path=$(jmm_helper_path_resolve "${path%/}")
     mains=""
     files=""
     for file in $(find "$path" -name '*.java'); do
@@ -424,6 +424,7 @@ jmm_test() {
     for path in "$@"; do
         if [[ -d "$path" ]]; then
             # if it's a directory recursively find all test files and execute them one at a time.
+            path="${path%/}"
             for dir in $path/*; do
                 jmm_test "$dir"
                 failures=$(($failures + $?))
