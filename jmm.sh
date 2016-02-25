@@ -116,7 +116,7 @@ jmm_helper_build_jar() {
     classPaths=""
     for file; do
         if [[ $file != "_test.java"* ]]; then
-            classFiles+=("$file")
+            classFiles+=("$(jmm_helper_path_resolve "$file")")
             classPaths="$classPaths -C $JMMPATH/pkg $(jmm_helper_get_class_path $file).class"
         fi
     done
