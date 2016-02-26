@@ -62,10 +62,6 @@ Cyclomatic complexity can be no higher than 8. Methods that have a higher comple
 
 Catch blocks are __NOT__ allowed to trap the following `java.lang.Exception`, `java.lang.Throwable`, `java.lang.RuntimeException`.
 
-### Throw
-
-Declaring methods that throw either `java.lang.Throwable`, `java.lang.Error` or `java.lang.RuntimeException` is __NOT__ allowed.
-
 ### No Nested Blocks
 
 Nested blocks are __NOT__ allowed. There is no alternative.

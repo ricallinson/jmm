@@ -21,7 +21,10 @@
         <!-- <module name="DeclarationOrder"/> -->
         <module name="EmptyStatement"/>
         <module name="EqualsAvoidNull"/>
-        <module name="IllegalCatch"/>
+        <module name="IllegalCatch">
+            <property name="illegalClassNames" value="java.lang.RuntimeException"/>
+            <property name="illegalClassNames" value="java.lang.Throwable"/>
+        </module>
         <module name="IllegalThrows"/>
         <module name="IllegalToken">
             <!-- opinionated style -->
