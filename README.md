@@ -117,6 +117,18 @@ Directories are tested recursively to allow packages to be tested with one comma
 
     jmm test ./src/github/com/jminusminus/jmmtest
 
+Coverage reports can be generated when running tests. To instrument a file for coverage the `Xxx.java` file must have a corresponding `Xxx_test.java` file.
+
+Generating a coverage report from a test file.
+
+    jmm test cover ./src/github/com/jminusminus/jmmtest/TestClass_test.java
+    open ./coverage/index.html
+
+Generating a coverage report from a directory and recursively all sub directories.
+
+    jmm test cover ./src/github/com/jminusminus/jmmtest
+    open ./coverage/index.html
+
 ### jmm version
 
 Prints the version of jmm in use.

@@ -14,13 +14,21 @@
 # Constants
 #
 
-export JMMVERSION="0.0.1"
+COBERTURA_DIR="$JMMHOME/vendor/cobertura"
+COBERTURA=$COBERTURA_DIR/cobertura-2.1.1.jar:$COBERTURA_DIR/lib/asm-5.0.1.jar:$COBERTURA_DIR/lib/asm-analysis-5.0.1.jar:$COBERTURA_DIR/lib/asm-tree-5.0.1.jar:$COBERTURA_DIR/lib/asm-commons-5.0.1.jar:$COBERTURA_DIR/lib/asm-util-5.0.1.jar:$COBERTURA_DIR/lib/commons-lang3-3.3.2.jar:$COBERTURA_DIR/lib/slf4j-api-1.7.5.jar:$COBERTURA_DIR/lib/logback-core-1.0.13.jar:$COBERTURA_DIR/lib/logback-classic-1.0.13.jar:$COBERTURA_DIR/lib/oro-2.0.8.jar
 JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
+
 export JMMHOME=$JMMHOME
+export JMMVERSION="0.0.1"
 
 #
 # Helper functions
 #
+
+jmm_debug() {
+    echo "$1" >> "$JMMPATH/debug.txt"
+    return 0
+}
 
 # @String $1 - Directory path
 # @return "dir/path"
@@ -48,19 +56,44 @@ jmm_helper_get_jar_name() {
     return 0
 }
 
-# @String $1 - Directory path
+# @String $1 - Directory or file path
 # @return "dir/path"
-# Returns a class path from a given absolute path.
-jmm_helper_get_class_path() {
+# Returns a list of class files.
+jmm_helper_get_class_files_for_coverage() {
+    local files
     local absPath
     local jmmSize
     local absSize
     local absPath
     absPath=$(jmm_helper_path_resolve "$1")
-    jmmSize=${#JMMPATH}+5 # remove /src/
-    absSize=$((${#absPath}-5))
-    absPath=${absPath:0:$absSize} # remove .class
-    echo "${absPath:$jmmSize}"
+    if [[ -d "$absPath" ]]; then
+        # if it's a directory recursively find all test files and execute them one at a time.
+        for file in $absPath/*; do
+            files="$files $(jmm_helper_get_class_files_for_coverage $file)"
+        done
+    elif [[ -f "$absPath" ]] && [[ "$absPath" == *"_test.java" ]]; then
+        jmmSize=${#JMMPATH}+5 # remove $JMMPATH/src/
+        absSize=$((${#absPath}-10)) # remove _test.java
+        absPath=${absPath:0:$absSize} # $JMMPATH/src/repo/file
+        files="$JMMPATH/pkg/${absPath:$jmmSize}.class" # repo/file
+    fi
+    echo $files
+    return 0
+}
+
+# @String $1 - Class path to a .java file
+# @return "dir/path"
+# Returns a class path from a given file path.
+jmm_helper_get_class_path() {
+    local absPath
+    local jmmSize
+    local absSize
+    local absPath
+    absPath=$(jmm_helper_path_resolve "$1") # $JMMPATH/src/repo/file.java
+    jmmSize=${#JMMPATH}+5 # remove $JMMPATH/src/
+    absSize=$((${#absPath}-5)) # remove .java
+    absPath=${absPath:0:$absSize} # $JMMPATH/src/repo/file
+    echo "${absPath:$jmmSize}" # repo/file
     return 0
 }
 
@@ -102,14 +135,12 @@ jmm_helper_resolve() {
 # @String $1 - File path to a .java with the main method for the .jar
 # @String $@ - List of .java files to put in the .jar
 # @return "path/to.jar" || "compile error"
-jmm_helper_build_jar() {
-    local jarName
+jmm_helper_compile() {
     local classPath
     local classFiles
     local classPaths
     mkdir -p "$JMMPATH/bin"
     mkdir -p "$JMMPATH/pkg"
-    jarName=$(jmm_helper_get_jar_name "$1")
     classPath=$(jmm_helper_get_class_path "$1")
     classPath=${classPath//[\/]/\.}
     classFiles=()
@@ -125,7 +156,16 @@ jmm_helper_build_jar() {
         echo "javac -d $JMMPATH/pkg ${classFiles[@]}"
         return 1
     fi
-    jar cfe "$JMMPATH/bin/$jarName.jar" "$classPath" $classPaths
+    echo "$classPath" $classPaths
+}
+
+# @String $1 - File path to a .java with the main method for the .jar
+# @String $@ - List of .java files to put in the .jar
+# @return "path/to.jar" || "compile error"
+jmm_helper_build_jar() {
+    local jarName
+    jarName=$(jmm_helper_get_jar_name "$1")
+    jar cfe "$JMMPATH/bin/$jarName.jar" $(jmm_helper_compile "$@")
     echo "$JMMPATH/bin/$jarName.jar"
     return 0
 }
@@ -147,11 +187,13 @@ jmm_helper_find_java_files() {
 # Creates a new imported.txt file.
 jmm_start_import_check() {
     echo "" > "$JMMPATH/imported.txt"
+    return 0
 }
 
 # Removes an imported.txt file.
 jmm_end_import_check() {
     rm "$JMMPATH/imported.txt" > /dev/null
+    return 0
 }
 
 # @String $1 - Java import package name
@@ -159,7 +201,7 @@ jmm_end_import_check() {
 # Checks if the given package name has already been imported.
 jmm_helper_import_check() {
     local imported
-    read -r -a imported < $JMMPATH/imported.txt
+    read -r -a imported < "$JMMPATH/imported.txt"
     for import in "${imported[@]}"; do
         if [[ "$1" == "$import" ]]; then
             echo "skip"
@@ -167,7 +209,7 @@ jmm_helper_import_check() {
         fi
     done
     imported+=("$1")
-    echo "${imported[@]}" > $JMMPATH/imported.txt
+    echo "${imported[@]}" > "$JMMPATH/imported.txt"
     echo "import"
     return 0
 }
@@ -192,25 +234,56 @@ jmm_helper_resolve_imports() {
     return 0
 }
 
-# @String $1 - Path to a Jmm test file.
-# @return "pass" || "fail"
-# Runs the given test file and reports if it passes or fails.
-jmm_run_test() {
-    local files
-    local dir
-    jmm_start_import_check
-    # get all the files used in the imports.
-    files="$1 $(jmm_helper_resolve_imports "$1")"
-    # get all the files in the same directory.
-    for file in $(find "$(dirname "$1")" -name "*.java"); do
-        if [[ ! -d "$file" ]] && [[ "$file" != *"_test.java" ]]; then
-            files="$files $file $(jmm_helper_resolve_imports "$file")"
-        fi 
-    done
-    jmm_end_import_check
-    # run the test.
-    jmm_run $files
-    return $?
+# @String $1 - Directory or path to test.
+# @return number of failed tests
+# Runs the given test file and returns the number of failures.
+jmm_test_run() {
+    local failures
+    local testClass
+    local buf
+    local path=$1
+    if [[ -d "$path" ]]; then
+        # if it's a directory recursively find all test files and execute them one at a time.
+        path="${path%/}"
+        for dir in $path/*; do
+            jmm_test_run "$dir"
+            failures=$(($failures + $?))
+        done
+    elif [[ -f "$path" ]] && [[ "$path" == *"_test.java" ]]; then
+        # if the file ends with "_test.java" then run it.
+        testClass=$(jmm_helper_get_class_path "$path")
+        testClass=${testClass//[\/]/\.}
+        java -cp $JMMPATH/pkg $testClass
+        failures=$(($failures + $?))
+    fi
+    return $(($failures))
+}
+
+# @String $1 - Directory or path to test.
+# @return number of failed tests
+# Runs the given test directory or path, generates coverage report and returns the number of failures.
+jmm_test_run_coverage() {
+    local failures
+    local testClass
+    local buf
+    local path=$1
+    if [[ -d "$path" ]]; then
+        # if it's a directory recursively find all test files and execute them one at a time.
+        path="${path%/}"
+        for dir in $path/*; do
+            jmm_test_run_coverage "$dir"
+            failures=$(($failures + $?))
+        done
+    elif [[ -f "$path" ]] && [[ "$path" == *"_test.java" ]]; then
+        # if the file ends with "_test.java" then run it.
+        testClass=$(jmm_helper_get_class_path "$path")
+        testClass=${testClass//[\/]/\.}
+        java -cp $COBERTURA:$JMMPATH/pkg \
+            -Dnet.sourceforge.cobertura.datafile=$JMMPATH/cobertura.ser \
+            $testClass
+        failures=$(($failures + $?))
+    fi
+    return $(($failures))
 }
 
 #
@@ -219,8 +292,8 @@ jmm_run_test() {
 
 # @String $1 - Directory path
 # @return "compile error" || ""
-# Compiles the files in the given directory resolving all packages and places final jar in $JMMHOME/bin.
-jmm_install() {
+# Compiles the files in the given directory resolving all packages and places final class files in $JMMPATH/pkg.
+jmm_helper_resolve_dir_for_compile() {
     local path
     local mains
     local imports
@@ -232,7 +305,6 @@ jmm_install() {
     if [[ -z "$path" ]]; then
         path="."
     fi
-    jmm_start_import_check
     jmm_lint $path
     if [[ $? -gt 0 ]]; then
         return 1
@@ -240,6 +312,7 @@ jmm_install() {
     path=$(jmm_helper_path_resolve "${path%/}")
     mains=""
     files=""
+    jmm_start_import_check
     for file in $(find "$path" -name '*.java'); do
         if [ "$mains" = "" ] && grep -q "public static void main(" "$file"; then
             imports=$(jmm_helper_resolve_imports "$file")
@@ -249,7 +322,16 @@ jmm_install() {
             files="$files $file $imports"
         fi
     done
-    jar=$(jmm_helper_build_jar $mains $files)
+    jmm_end_import_check
+    echo "$mains $files"
+}
+
+# @String $1 - Directory path
+# @return "compile error" || ""
+# Compiles the files in the given directory resolving all packages and places final jar in $JMMPATH/bin.
+jmm_install() {
+    local jar
+    jar=$(jmm_helper_build_jar $(jmm_helper_resolve_dir_for_compile $1))
     if [[ $? -eq 1 ]]; then
         echo $jar
         return 1
@@ -257,11 +339,10 @@ jmm_install() {
     exe=${jar:0:${#jar}-4}
     echo "java -jar $jar" > "$exe"
     chmod +x "$exe"
-    jmm_end_import_check
     return 0
 }
 
-# Deletes all files in $JMMHOME/bin and $JMMHOME/pkg
+# Deletes all files in $JMMPATH/bin and $JMMPATH/pkg
 jmm_clean() {
     rm -rf "${JMMPATH:?}/bin/"*
     rm -rf "$JMMPATH/pkg/"*
@@ -277,7 +358,7 @@ jmm_env() {
 }
 
 # @String $@ - Package names
-# Downloads the given github.com package(s) and unpacks them into $JMMHOME/src.
+# Downloads the given github.com package(s) and unpacks them into $JMMPATH/src.
 # currently only works with github.com zip files.
 jmm_get() {
     local packageDir
@@ -402,7 +483,7 @@ jmm_list() {
 }
 
 # @String $@ - File path(s) to .java files
-# Creates a jar in $JMMHOME/bin and executes it.
+# Creates a jar in $JMMPATH/bin and executes it.
 jmm_run() {
     local jarFile
     jmm_lint "$@"
@@ -414,28 +495,89 @@ jmm_run() {
     return $?
 }
 
-# @String $@ - Directory or file path(s) to &_test.java files
+# @String $@ - Directory or file path(s) to _test.java files
+# Runs the tests for the given or found files and generate coverage reports.
+jmm_test_coverage() {
+    local path
+    local testPath
+    local files
+    local compileClassPaths
+    local buf
+    local failures
+    local coverageDir
+    path=$(jmm_helper_path_resolve "$1")
+    if [[ -d "$path" ]]; then
+        files=$(jmm_helper_resolve_dir_for_compile "$path")
+        testPath=$path
+    elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
+        jmm_start_import_check
+        files="$path $(jmm_helper_resolve_imports "$path")"
+        jmm_end_import_check
+        testPath="$(dirname $path)"
+        files="$files $(jmm_helper_resolve_dir_for_compile $testPath)"
+    fi
+    jmm_lint $files
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
+    compileClassPaths=$(jmm_helper_compile $files)
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
+    coverageFiles=$(jmm_helper_get_class_files_for_coverage $path)
+    # echo "instrumenting"
+    buf=$(java -cp $COBERTURA net.sourceforge.cobertura.instrument.InstrumentMain \
+        --datafile $JMMPATH/cobertura.ser \
+        $coverageFiles)
+    # echo "running tests"
+    jmm_test_run_coverage $path
+    failures=$?
+    # echo "generating coverage report"
+    rm -rf $JMMPATH/coverage
+    buf=$(java -cp $COBERTURA net.sourceforge.cobertura.reporting.ReportMain \
+        --datafile $JMMPATH/cobertura.ser \
+        --destination $JMMPATH/coverage \
+        --format html \
+        $JMMPATH/src \
+        2> /dev/null)
+    # echo "checking coverage"
+    # buf=$(java -cp $COBERTURA net.sourceforge.cobertura.check.CheckCoverageMain \
+    #   --datafile $JMMPATH/cobertura.ser \
+    #   --totalbranch 100 \
+    #   --totalline 100)
+    rm $JMMPATH/cobertura.ser
+    return $((failures))
+}
+
+# @String $@ - Directory or file path(s) to _test.java files
 # Runs the tests for the given or found files.
 jmm_test() {
-    local failures
-    failures=$((0))
-    jmm_lint "$@"
-    failures=$(($failures + $?))
-    for path in "$@"; do
-        if [[ -d "$path" ]]; then
-            # if it's a directory recursively find all test files and execute them one at a time.
-            path="${path%/}"
-            for dir in $path/*; do
-                jmm_test "$dir"
-                failures=$(($failures + $?))
-            done
-        elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
-            # if the file ends with "_test.java" then run it.
-            jmm_run_test "$path"
-            failures=$(($failures + $?))
-        fi
-    done
-    return $(($failures))
+    local path
+    local testPath
+    local files
+    local compileClassPaths
+    path=$(jmm_helper_path_resolve "$1")
+    if [[ -d "$path" ]]; then
+        files=$(jmm_helper_resolve_dir_for_compile "$path")
+        testPath=$path
+    elif [[ -e "$path" ]] && [[ "$path" == *"_test.java" ]]; then
+        jmm_start_import_check
+        files="$path $(jmm_helper_resolve_imports "$path")"
+        jmm_end_import_check
+        testPath="$(dirname $path)"
+        files="$files $(jmm_helper_resolve_dir_for_compile $testPath)"
+    fi
+    jmm_lint $files
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
+    compileClassPaths=$(jmm_helper_compile $files)
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
+    # echo "running tests"
+    jmm_test_run $path
+    return $?
 }
 
 # Prints the current version of this tool.
@@ -504,7 +646,11 @@ jmm() {
         jmm_run "${@:2}"
     ;;
     "test" )
-        jmm_test "${@:2}"
+        if [[ $2 == "cover" ]]; then
+            jmm_test_coverage "${@:3}"
+        else
+            jmm_test "${@:2}"
+        fi
     ;;
     *)
         echo "jmm: unknown subcommand \"$1\""
