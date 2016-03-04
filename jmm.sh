@@ -152,11 +152,12 @@ jmm_helper_compile() {
         fi
     done
     javac -d "$JMMPATH/pkg" "${classFiles[@]}"
-    if [[ $? -eq 1 ]]; then
+    if [[ $? > 0 ]]; then
         echo "javac -d $JMMPATH/pkg ${classFiles[@]}"
-        return 1
+        return $?
     fi
     echo "$classPath" $classPaths
+    return 0
 }
 
 # @String $1 - File path to a .java with the main method for the .jar
@@ -305,10 +306,6 @@ jmm_helper_resolve_dir_for_compile() {
     if [[ -z "$path" ]]; then
         path="."
     fi
-    jmm_lint $path
-    if [[ $? -gt 0 ]]; then
-        return 1
-    fi
     path=$(jmm_helper_path_resolve "${path%/}")
     mains=""
     files=""
@@ -330,9 +327,15 @@ jmm_helper_resolve_dir_for_compile() {
 # @return "compile error" || ""
 # Compiles the files in the given directory resolving all packages and places final jar in $JMMPATH/bin.
 jmm_install() {
+    local files
     local jar
-    jar=$(jmm_helper_build_jar $(jmm_helper_resolve_dir_for_compile $1))
-    if [[ $? -eq 1 ]]; then
+    files=$(jmm_helper_resolve_dir_for_compile $1)
+    jmm_lint $files
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
+    jar=$(jmm_helper_build_jar $files)
+    if [[ $? > 0 ]]; then
         echo $jar
         return 1
     fi
@@ -448,7 +451,7 @@ jmm_lint() {
         files="$files $file"
     done
     result=$(java -jar "$JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar" -c "$JMMHOME/lint.xml" $files)
-    if [[ $? -gt 0 ]]; then
+    if [[ $? > 0 ]]; then
         echo "$result"
         return 1
     fi
@@ -487,7 +490,7 @@ jmm_list() {
 jmm_run() {
     local jarFile
     jmm_lint "$@"
-    if [[ $? -gt 0 ]]; then
+    if [[ $? > 0 ]]; then
         return 1
     fi
     jarFile=$(jmm_helper_build_jar "$@")
@@ -522,6 +525,8 @@ jmm_test_coverage() {
     fi
     compileClassPaths=$(jmm_helper_compile $files)
     if [[ $? > 0 ]]; then
+        echo "Compile Error"
+        echo compileClassPaths
         return $?
     fi
     coverageFiles=$(jmm_helper_get_class_files_for_coverage $path)
@@ -573,6 +578,8 @@ jmm_test() {
     fi
     compileClassPaths=$(jmm_helper_compile $files)
     if [[ $? > 0 ]]; then
+        echo "Compile Error"
+        echo compileClassPaths
         return $?
     fi
     # echo "running tests"
