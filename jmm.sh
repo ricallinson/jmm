@@ -340,7 +340,7 @@ jmm_install() {
         return 1
     fi
     exe=${jar:0:${#jar}-4}
-    echo "java -jar $jar" > "$exe"
+    echo "java -jar $jar \$@" > "$exe"
     chmod +x "$exe"
     return 0
 }
