@@ -12,6 +12,7 @@
     <property name="severity" value="error"/>
     <property name="fileExtensions" value="java"/>
     <module name="TreeWalker">
+        <module name="LeftCurly"/>
         <module name="AvoidNestedBlocks"/>
         <module name="EmptyBlock"/>
         <module name="InterfaceIsType"/>
