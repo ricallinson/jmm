@@ -14,9 +14,9 @@
 # Constants
 #
 
+JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 COBERTURA_DIR="$JMMHOME/vendor/cobertura"
 COBERTURA=$COBERTURA_DIR/cobertura-2.1.1.jar:$COBERTURA_DIR/lib/asm-5.0.1.jar:$COBERTURA_DIR/lib/asm-analysis-5.0.1.jar:$COBERTURA_DIR/lib/asm-tree-5.0.1.jar:$COBERTURA_DIR/lib/asm-commons-5.0.1.jar:$COBERTURA_DIR/lib/asm-util-5.0.1.jar:$COBERTURA_DIR/lib/commons-lang3-3.3.2.jar:$COBERTURA_DIR/lib/slf4j-api-1.7.5.jar:$COBERTURA_DIR/lib/logback-core-1.0.13.jar:$COBERTURA_DIR/lib/logback-classic-1.0.13.jar:$COBERTURA_DIR/lib/oro-2.0.8.jar
-JMMHOME="$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )"
 
 export JMMHOME=$JMMHOME
 export JMMVERSION="0.0.1"
@@ -349,6 +349,7 @@ jmm_install() {
 jmm_clean() {
     rm -rf "${JMMPATH:?}/bin/"*
     rm -rf "$JMMPATH/pkg/"*
+    rm -rf "$JMMPATH/coverage"
     return 0
 }
 
