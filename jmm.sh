@@ -329,11 +329,13 @@ jmm_helper_resolve_dir_for_compile() {
 jmm_install() {
     local files
     local jar
+    # Get all the .java file paths.
     files=$(jmm_helper_resolve_dir_for_compile $1)
     jmm_lint $files
     if [[ $? > 0 ]]; then
         return $?
     fi
+    # Get missing packages.
     jar=$(jmm_helper_build_jar $files)
     if [[ $? > 0 ]]; then
         echo $jar
@@ -399,7 +401,7 @@ jmm_help() {
     echo
     echo "The commands are:"
     echo
-    echo "    install       compile packages and dependencies"
+    echo "    install     compile packages and dependencies"
     echo "    clean       remove object files"
     echo "    doc         (not implemented) show documentation for package or symbol"
     echo "    env         print Jmm environment information"
@@ -473,12 +475,10 @@ jmm_list() {
         done
     else
         if [[ "$path" == *".java" ]]; then
-            for package in $(grep ^package "$1"); do
-                if [[ "$package" != "package" ]]; then
-                    package=${package//[;]/}
-                    if [[ "$(jmm_helper_import_check "$package")" == "import" ]]; then
-                        echo "$package"
-                    fi
+            for import in $(grep ^import "$1"); do
+                if [[ "$import" != "import" ]] && [[ -n "$import" ]] && [[ "$(jmm_helper_import_check "$import")" == "import" ]]; then
+                    import=${import//[;]/}
+                    echo "$import"
                 fi
             done
         fi

@@ -7,13 +7,17 @@
 #
 
 source ../jmm.sh
-data=$(jmm list $JMMPATH/src/github/com/jminusminus/jmminstall)
-if [[ "$data" != *"github.com.jminusminus.jmminstall"* ]] && [[ "$data" != *"github.com.jminusminus.jmminstall.sub"* ]]; then
+data=$(jmm list $JMMPATH/src/github/com/jminusminus/jmmrecursiveimport)
+if [[ "$data" == *".jmmrecursiveimport.sub.SecondClass"* ]] && [[ "$data" == *".jmmrecursiveimport.FirstClass"* ]]; then
+	echo ""
+else
 	echo "Test did not execute."
 	exit 1
 fi
 data=$(jmm list $JMMPATH/src/github/com/jminusminus/jmminstall/BuildClass.java)
-if [[ "$data" != "github.com.jminusminus.jmminstall"* ]]; then
+if [[ "$data" == "github.com.jminusminus.jmminstall"* ]]; then
+	echo ""
+else
 	echo "Test did not execute."
 	exit 1
 fi
