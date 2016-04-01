@@ -329,6 +329,7 @@ jmm_helper_resolve_dir_for_compile() {
 jmm_install() {
     local files
     local jar
+    jmm_run_script_if_exists "preinstall"
     # Get all the .java file paths.
     files=$(jmm_helper_resolve_dir_for_compile $1)
     jmm_lint $files
@@ -344,6 +345,7 @@ jmm_install() {
     exe=${jar:0:${#jar}-4}
     echo "java -jar $jar \$@" > "$exe"
     chmod +x "$exe"
+    jmm_run_script_if_exists "postinstall"
     return 0
 }
 
@@ -499,8 +501,21 @@ jmm_run() {
     return $?
 }
 
+# @String $1 - File path to a script
+# @String ${@:2} - Arguments for the script
+# Executes the given script with the given arguments.
 jmm_run_script() {
     $JMMPATH/scripts/$1 ${@:2}
+    return $?
+}
+
+# @String $1 - File path to a script
+# @String ${@:2} - Arguments for the script
+# Executes the given script with the given arguments if the script exists.
+jmm_run_script_if_exists() {
+    if [[ -f $1 ]]; then
+        jmm_run_script ${@}
+    fi
     return $?
 }
 
@@ -514,6 +529,7 @@ jmm_test_coverage() {
     local buf
     local failures
     local coverageDir
+    jmm_run_script_if_exists "pretest"
     path=$(jmm_helper_path_resolve "$1")
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
@@ -557,6 +573,7 @@ jmm_test_coverage() {
     #   --totalbranch 100 \
     #   --totalline 100)
     rm $JMMPATH/cobertura.ser
+    jmm_run_script_if_exists "posttest"
     return $((failures))
 }
 
@@ -567,6 +584,7 @@ jmm_test() {
     local testPath
     local files
     local compileClassPaths
+    jmm_run_script_if_exists "pretest"
     path=$(jmm_helper_path_resolve "$1")
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
@@ -590,6 +608,7 @@ jmm_test() {
     fi
     # echo "running tests"
     jmm_test_run $path
+    jmm_run_script_if_exists "posttest"
     return $?
 }
 

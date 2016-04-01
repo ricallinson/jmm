@@ -107,6 +107,12 @@ Provide one or more `.java` files to run. The first file must have the main meth
 
     jmm run ./src/github/com/jminusminus/jmmrun/RunClass.java ./src/github/com/jminusminus/jmmrun/OtherClass.java
 
+### run-script
+
+Execute a script in the `scripts` folder.
+
+    jmm run-script foo
+
 ### jmm test
 
 Tests in Jmm are identified by the postfix `_test` on a `.java` file. The class must have a main method and be in the same directory as the code it's testing or import the code it's testing. Test files are executed one at time in isolation from each other. All test files are excluded from a install.
