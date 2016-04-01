@@ -113,6 +113,13 @@ Execute a script in the `scripts` folder.
 
     jmm run-script foo
 
+Jmm supports automatic execution for the following scripts:
+
+* preinstall: Run BEFORE the package is installed.
+* postinstall: Run AFTER the package is installed.
+* pretest: Run BEFORE the package is tested.
+* posttest: Run AFTER the package is tested.
+
 ### jmm test
 
 Tests in Jmm are identified by the postfix `_test` on a `.java` file. The class must have a main method and be in the same directory as the code it's testing or import the code it's testing. Test files are executed one at time in isolation from each other. All test files are excluded from a install.

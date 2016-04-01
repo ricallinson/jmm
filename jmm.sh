@@ -529,7 +529,6 @@ jmm_test_coverage() {
     local buf
     local failures
     local coverageDir
-    jmm_run_script_if_exists "pretest"
     path=$(jmm_helper_path_resolve "$1")
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
@@ -573,7 +572,6 @@ jmm_test_coverage() {
     #   --totalbranch 100 \
     #   --totalline 100)
     rm $JMMPATH/cobertura.ser
-    jmm_run_script_if_exists "posttest"
     return $((failures))
 }
 
@@ -584,7 +582,6 @@ jmm_test() {
     local testPath
     local files
     local compileClassPaths
-    jmm_run_script_if_exists "pretest"
     path=$(jmm_helper_path_resolve "$1")
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
@@ -608,7 +605,6 @@ jmm_test() {
     fi
     # echo "running tests"
     jmm_test_run $path
-    jmm_run_script_if_exists "posttest"
     return $?
 }
 
