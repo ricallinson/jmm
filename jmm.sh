@@ -329,7 +329,6 @@ jmm_helper_resolve_dir_for_compile() {
 jmm_install() {
     local files
     local jar
-    jmm_run_script_if_exists "preinstall"
     # Get all the .java file paths.
     files=$(jmm_helper_resolve_dir_for_compile $1)
     jmm_lint $files
@@ -345,7 +344,6 @@ jmm_install() {
     exe=${jar:0:${#jar}-4}
     echo "java -jar $jar \$@" > "$exe"
     chmod +x "$exe"
-    jmm_run_script_if_exists "postinstall"
     return 0
 }
 
