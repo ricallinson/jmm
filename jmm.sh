@@ -499,6 +499,11 @@ jmm_run() {
     return $?
 }
 
+jmm_run_script() {
+    $JMMPATH/scripts/$1 ${@:2}
+    return $?
+}
+
 # @String $@ - Directory or file path(s) to _test.java files
 # Runs the tests for the given or found files and generate coverage reports.
 jmm_test_coverage() {
@@ -652,6 +657,9 @@ jmm() {
     ;;
     "run" )
         jmm_run "${@:2}"
+    ;;
+    "run-script" )
+        jmm_run_script "${@:2}"
     ;;
     "test" )
         if [[ $2 == "cover" ]]; then
