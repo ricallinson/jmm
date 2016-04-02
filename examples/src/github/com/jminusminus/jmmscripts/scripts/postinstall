@@ -6,4 +6,4 @@
 # See the accompanying LICENSE file for terms.
 #
 
-echo "Test 2: ${@}"
+echo "Post Install"

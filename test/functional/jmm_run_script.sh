@@ -8,30 +8,23 @@
 
 source ../jmm.sh
 
-data=$(jmm run-script test1)
-if [ "$data" != "Test 1: " ]; then
-	echo "Test1 did not execute correctly"
+data=$(jmm test $JMMPATH/src/github/com/jminusminus/jmmscripts)
+if [[ "$data" != "Pre Test"* && "$data" != *"Post Test" ]]; then
+	echo "script jmm test failed"
 	echo "$data"
 	exit 1
 fi
 
-data=$(jmm run-script test1 a b c)
-if [ "$data" != "Test 1: a b c" ]; then
-	echo "Test1 with args did not execute correctly"
+data=$(jmm test cover $JMMPATH/src/github/com/jminusminus/jmmscripts)
+if [[ "$data" != "Pre Test"* && "$data" != *"Post Test" ]]; then
+	echo "script jmm test cover failed"
 	echo "$data"
 	exit 1
 fi
 
-data=$(jmm run-script test2.sh)
-if [ "$data" != "Test 2: " ]; then
-	echo "Test1 did not execute correctly"
-	echo "$data"
-	exit 1
-fi
-
-data=$(jmm run-script test2.sh a b c)
-if [ "$data" != "Test 2: a b c" ]; then
-	echo "Test2 with args did not execute correctly"
+data=$(jmm install $JMMPATH/src/github/com/jminusminus/jmmscripts)
+if [[ "$data" != "Pre Install"* && "$data" != *"Post Install" ]]; then
+	echo "script jmm install failed"
 	echo "$data"
 	exit 1
 fi
