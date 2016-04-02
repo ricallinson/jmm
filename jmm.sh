@@ -389,8 +389,8 @@ jmm_get() {
         packageDir=${package//[\.]/\/}
         # Only clone the package if it is not already in the workspace.
         if [[ ! -d "$JMMPATH/src/$packageDir" ]]; then
-            # https://github.com/jminusminus/jmmexample.git
-            git clone "https://$package" "$JMMPATH/src/$packageDir"
+            # https://github.com/jminusminus/jmmexample
+            git clone "https://$package.git" "$JMMPATH/src/$packageDir"
         fi
     done
     return 0
