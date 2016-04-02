@@ -4,7 +4,7 @@
 // See the accompanying LICENSE file for terms.
 //
 
-package github.com.jminusminus.jmmtest;
+package github.com.jminusminus.jmmscripts;
 
 class TestClass {
 
