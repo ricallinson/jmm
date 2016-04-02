@@ -386,21 +386,24 @@ jmm_get() {
     local packageDir
     local packageName
     for package; do
-        curl -s -o "$JMMPATH/master.zip" -L "$package/archive/master.zip"
-        if grep -q "error" "$JMMPATH/master.zip"; then
-            rm "$JMMPATH/master.zip"
-            echo "Package '$package' not found"
-            return 1
-        fi
         packageDir=${package//[\.]/\/}
-        rm -rf "$JMMPATH/src/$packageDir"
-        mkdir -p "$JMMPATH/src/$packageDir"
-        unzip -qq "$JMMPATH/master.zip" -d "$JMMPATH/src/$packageDir"
-        packageName="$(basename $package)"
-        mv "$JMMPATH/src/$packageDir/$packageName-master/"* "$JMMPATH/src/$packageDir/$packageName-master/.."
-        mv "$JMMPATH/src/$packageDir/$packageName-master/".[^.]* "$JMMPATH/src/$packageDir/$packageName-master/.."
-        rm -r "$JMMPATH/src/$packageDir/$packageName-master"
-        rm "$JMMPATH/master.zip"
+        # rm -rf "$JMMPATH/src/$packageDir"
+        # Only get the package if it is not already in the workspace.
+        if [[ ! -d $packageDir ]]; then
+            curl -s -o "$JMMPATH/master.zip" -L "$package/archive/master.zip"
+            if grep -q "error" "$JMMPATH/master.zip"; then
+                rm "$JMMPATH/master.zip"
+                echo "Package '$package' not found"
+                return 1
+            fi
+            mkdir -p "$JMMPATH/src/$packageDir"
+            unzip -qq "$JMMPATH/master.zip" -d "$JMMPATH/src/$packageDir"
+            packageName="$(basename $package)"
+            mv "$JMMPATH/src/$packageDir/$packageName-master/"* "$JMMPATH/src/$packageDir/$packageName-master/.."
+            mv "$JMMPATH/src/$packageDir/$packageName-master/".[^.]* "$JMMPATH/src/$packageDir/$packageName-master/.."
+            rm -r "$JMMPATH/src/$packageDir/$packageName-master"
+            rm "$JMMPATH/master.zip"
+        fi
     done
     return 0
 }
