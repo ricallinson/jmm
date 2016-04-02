@@ -248,12 +248,10 @@ jmm_test_run() {
     if [[ -d "$path" ]]; then
         # if it's a directory recursively find all test files and execute them one at a time.
         path="${path%/}"
-        jmm_run_script_if_exists "$path/scripts/pretest"
         for dir in $path/*; do
             jmm_test_run "$dir"
             failures=$(($failures + $?))
         done
-        jmm_run_script_if_exists "$path/scripts/posttest"
     elif [[ -f "$path" ]] && [[ "$path" == *"_test.java" ]]; then
         # if the file ends with "_test.java" then run it.
         testClass=$(jmm_helper_get_class_path "$path")
@@ -275,12 +273,10 @@ jmm_test_run_coverage() {
     if [[ -d "$path" ]]; then
         # if it's a directory recursively find all test files and execute them one at a time.
         path="${path%/}"
-        jmm_run_script_if_exists "$path/scripts/pretest"
         for dir in $path/*; do
             jmm_test_run_coverage "$dir"
             failures=$(($failures + $?))
         done
-        jmm_run_script_if_exists "$path/scripts/posttest"
     elif [[ -f "$path" ]] && [[ "$path" == *"_test.java" ]]; then
         # if the file ends with "_test.java" then run it.
         testClass=$(jmm_helper_get_class_path "$path")
@@ -535,6 +531,10 @@ jmm_test_coverage() {
     local failures
     local coverageDir
     path=$(jmm_helper_path_resolve "$1")
+    jmm_run_script_if_exists "$path/scripts/pretest"
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
         testPath=$path
@@ -577,6 +577,10 @@ jmm_test_coverage() {
     #   --totalbranch 100 \
     #   --totalline 100)
     rm $JMMPATH/cobertura.ser
+    jmm_run_script_if_exists "$path/scripts/posttest"
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
     return $((failures))
 }
 
@@ -589,6 +593,10 @@ jmm_test() {
     local compileClassPaths
     local failures
     path=$(jmm_helper_path_resolve "$1")
+    jmm_run_script_if_exists "$path/scripts/pretest"
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
         testPath=$path
@@ -612,6 +620,10 @@ jmm_test() {
     # echo "running tests"
     jmm_test_run $path
     failures=$?
+    jmm_run_script_if_exists "$path/scripts/posttest"
+    if [[ $? > 0 ]]; then
+        return $?
+    fi
     return $((failures))
 }
 
