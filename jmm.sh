@@ -43,6 +43,8 @@ jmm_helper_path_resolve() {
     else
         echo "$(pwd)/$1"
     fi
+    # Strip trailing slash.
+
     return 0
 }
 
@@ -246,10 +248,12 @@ jmm_test_run() {
     if [[ -d "$path" ]]; then
         # if it's a directory recursively find all test files and execute them one at a time.
         path="${path%/}"
+        jmm_run_script_if_exists "$path/scripts/pretest"
         for dir in $path/*; do
             jmm_test_run "$dir"
             failures=$(($failures + $?))
         done
+        jmm_run_script_if_exists "$path/scripts/posttest"
     elif [[ -f "$path" ]] && [[ "$path" == *"_test.java" ]]; then
         # if the file ends with "_test.java" then run it.
         testClass=$(jmm_helper_get_class_path "$path")
@@ -271,10 +275,12 @@ jmm_test_run_coverage() {
     if [[ -d "$path" ]]; then
         # if it's a directory recursively find all test files and execute them one at a time.
         path="${path%/}"
+        jmm_run_script_if_exists "$path/scripts/pretest"
         for dir in $path/*; do
             jmm_test_run_coverage "$dir"
             failures=$(($failures + $?))
         done
+        jmm_run_script_if_exists "$path/scripts/posttest"
     elif [[ -f "$path" ]] && [[ "$path" == *"_test.java" ]]; then
         # if the file ends with "_test.java" then run it.
         testClass=$(jmm_helper_get_class_path "$path")
@@ -503,7 +509,7 @@ jmm_run() {
 # @String ${@:2} - Arguments for the script
 # Executes the given script with the given arguments.
 jmm_run_script() {
-    $JMMPATH/scripts/$1 ${@:2}
+    $1 ${@:2}
     return $?
 }
 
@@ -517,7 +523,7 @@ jmm_run_script_if_exists() {
     return $?
 }
 
-# @String $@ - Directory or file path(s) to _test.java files
+# @String $@ - Directory or file path to _test.java files
 # Runs the tests for the given or found files and generate coverage reports.
 jmm_test_coverage() {
     local path
@@ -573,13 +579,14 @@ jmm_test_coverage() {
     return $((failures))
 }
 
-# @String $@ - Directory or file path(s) to _test.java files
+# @String $@ - Directory or file path to _test.java files
 # Runs the tests for the given or found files.
 jmm_test() {
     local path
     local testPath
     local files
     local compileClassPaths
+    local failures
     path=$(jmm_helper_path_resolve "$1")
     if [[ -d "$path" ]]; then
         files=$(jmm_helper_resolve_dir_for_compile "$path")
@@ -603,7 +610,8 @@ jmm_test() {
     fi
     # echo "running tests"
     jmm_test_run $path
-    return $?
+    failures=$?
+    return $((failures))
 }
 
 # Prints the current version of this tool.

@@ -109,7 +109,7 @@ Provide one or more `.java` files to run. The first file must have the main meth
 
 ### run-script
 
-Execute a script in the `scripts` folder.
+Execute a script in a packages `scripts` folder.
 
     jmm run-script foo
 
