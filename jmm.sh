@@ -387,22 +387,10 @@ jmm_get() {
     local packageName
     for package; do
         packageDir=${package//[\.]/\/}
-        # rm -rf "$JMMPATH/src/$packageDir"
-        # Only get the package if it is not already in the workspace.
-        if [[ ! -d $packageDir ]]; then
-            curl -s -o "$JMMPATH/master.zip" -L "$package/archive/master.zip"
-            if grep -q "error" "$JMMPATH/master.zip"; then
-                rm "$JMMPATH/master.zip"
-                echo "Package '$package' not found"
-                return 1
-            fi
-            mkdir -p "$JMMPATH/src/$packageDir"
-            unzip -qq "$JMMPATH/master.zip" -d "$JMMPATH/src/$packageDir"
-            packageName="$(basename $package)"
-            mv "$JMMPATH/src/$packageDir/$packageName-master/"* "$JMMPATH/src/$packageDir/$packageName-master/.."
-            mv "$JMMPATH/src/$packageDir/$packageName-master/".[^.]* "$JMMPATH/src/$packageDir/$packageName-master/.."
-            rm -r "$JMMPATH/src/$packageDir/$packageName-master"
-            rm "$JMMPATH/master.zip"
+        # Only clone the package if it is not already in the workspace.
+        if [[ ! -d "$JMMPATH/src/$packageDir" ]]; then
+            # https://github.com/jminusminus/jmmexample.git
+            git clone "https://$package" "$JMMPATH/src/$packageDir"
         fi
     done
     return 0
