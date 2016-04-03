@@ -109,7 +109,11 @@ Provide one or more `.java` files to run. The first file must have the main meth
 
 ### run-script
 
-Execute a script in a packages `scripts` folder.
+Execute a script in a packages `scripts` folder. From within a Jmm workspace;
+
+    jmm run-script path/to/package foo
+
+Ot if you are i the package directory;
 
     jmm run-script foo
 

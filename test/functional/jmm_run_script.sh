@@ -29,4 +29,27 @@ if [[ "$data" != "Pre Install"* && "$data" != *"Post Install" ]]; then
 	exit 1
 fi
 
+data=$(jmm run-script $JMMPATH/src/github/com/jminusminus/jmmscripts foo)
+if [[ "$data" != "Foo" ]]; then
+	echo "script jmm run-script [abspath] [foo] failed"
+	echo "$data"
+	exit 1
+fi
+
+cd $JMMPATH/src/github/com/jminusminus
+data=$(jmm run-script jmmscripts foo)
+if [[ "$data" != "Foo" ]]; then
+	echo "script jmm run-script [relpath] [foo] failed"
+	echo "$data"
+	exit 1
+fi
+
+cd $JMMPATH/src/github/com/jminusminus/jmmscripts
+data=$(jmm run-script foo)
+if [[ "$data" != "Foo" ]]; then
+	echo "script jmm run-script [foo] failed"
+	echo "$data"
+	exit 1
+fi
+
 exit 0
