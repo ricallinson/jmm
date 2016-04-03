@@ -502,11 +502,19 @@ jmm_run() {
     return $?
 }
 
-# @String $1 - File path to a script
+# @String $1 - Script name
 # @String ${@:2} - Arguments for the script
 # Executes the given script with the given arguments.
 jmm_run_script() {
-    $1 ${@:2}
+    local path
+    local script
+    if [[ $2 ]]; then
+        path=$(jmm_helper_path_resolve "$1/scripts")
+        $path/$2 ${@:2}
+        return $?
+    fi
+    path=$(jmm_helper_path_resolve "./scripts")
+    $path/$1 ${@:2}
     return $?
 }
 
@@ -515,8 +523,16 @@ jmm_run_script() {
 # Executes the given script with the given arguments if the script exists.
 jmm_run_script_if_exists() {
     if [[ -f $1 ]]; then
-        jmm_run_script ${@}
+        jmm_run_script_at_path ${@}
     fi
+    return $?
+}
+
+# @String $1 - File path to a script
+# @String ${@:2} - Arguments for the script
+# Executes the given script with the given arguments.
+jmm_run_script_at_path() {
+    $1 ${@:2}
     return $?
 }
 
