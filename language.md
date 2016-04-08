@@ -58,6 +58,10 @@ An interface __MUST__ contain methods.
 
 Cyclomatic complexity can be no higher than 8. Methods that have a higher complexity value must be broken down into smaller methods.
 
+### Method Parameters
+
+Methods can have no more than 5 parameters. If more are required consider using an object as a configuration container.
+
 ### Catch Blocks
 
 Catch blocks are __ONLY__ allowed to trap `java.lang.Exception`.
