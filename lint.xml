@@ -51,6 +51,9 @@
         <module name="CyclomaticComplexity">
             <property name="max" value="8"/>
         </module>
+        <module name="ParameterNumber">
+            <property name="max" value="5"/>
+        </module>
         <module name="Indentation"/>
         <module name="OuterTypeFilename"/>
         <module name="RedundantModifier"/>
