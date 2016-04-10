@@ -7,6 +7,7 @@
 #
 
 source ../jmm.sh
+error=$((0))
 packageDir=$JMMPATH/src/github/com/jminusminus/jmmexample
 if [ -d $packageDir ]; then
 	rm -rf $packageDir
@@ -15,15 +16,15 @@ fi
 jmm get github.com/jminusminus/jmmexample
 if [ ! -d $packageDir ]; then
 	echo "Package was not downloaded."
-	exit 1
+	error=$((1))
 fi
 
 touch $packageDir/tmp.txt
 jmm get github.com/jminusminus/jmmexample
 if [ ! -f $packageDir/tmp.txt ]; then
 	echo "Package was downloaded when it shouldn't have been."
-	exit 1
+	error=$((1))
 fi
 
 rm -rf $packageDir
-exit 0
+exit error

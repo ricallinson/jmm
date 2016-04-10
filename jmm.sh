@@ -337,6 +337,8 @@ jmm_install() {
     if [[ $? > 0 ]]; then
         return $?
     fi
+    # Find all imported packages and make sure they are installed.
+
     # Get all the .java file paths.
     files=$(jmm_helper_resolve_dir_for_compile $path)
     jmm_lint $files
@@ -367,6 +369,16 @@ jmm_clean() {
     return 0
 }
 
+# @String $1 - Jmm class path || null
+# @return doc output.
+jmm_doc() {
+    if [[ ! -f $JMMPATH/bin/doc ]]; then
+        jmm_get "github.com/jminusminus/doc"
+    fi
+    $JMMPATH/bin/doc ${@}
+    return $?
+}
+
 # Prints the exported variables used by Jmm.
 jmm_env() {
     echo "JMMPATH=\"$JMMPATH\""
@@ -387,6 +399,7 @@ jmm_get() {
         if [[ ! -d "$JMMPATH/src/$packageDir" ]]; then
             # https://github.com/jminusminus/jmmexample
             git clone "https://$package.git" "$JMMPATH/src/$packageDir"
+            jmm_install "$JMMPATH/src/$packageDir"
         fi
     done
     return 0
@@ -466,7 +479,7 @@ jmm_lint() {
 
 # @String $1 - Directory path
 # Prints the packages used in the given directory.
-jmm_list() {
+jmm_list_classes() {
     local path
     path="$1"
     if [[ -z "$path" ]]; then
@@ -487,6 +500,25 @@ jmm_list() {
         fi
     fi
     return 0
+}
+
+# @String $1 - Directory path
+# Prints the packages used in the given directory.
+jmm_list_packages() {
+    jmm_list_classes $1
+    return $?
+}
+
+# @String $1 - Directory path
+# Prints the packages used in the given directory.
+jmm_list() {
+    local path
+    path=$1
+    if [[ -z $path ]]; then
+        path=$JMMPATH
+    fi
+    jmm_list_packages $path
+    return $?
 }
 
 # @String $@ - File path(s) to .java files
@@ -689,7 +721,7 @@ jmm() {
         jmm_clean
     ;;
     "doc" )
-        echo "TODO"
+        jmm_doc "${@:2}"
     ;;
     "get" )
         jmm_get "${@:2}"
