@@ -53,6 +53,20 @@ Removes all files in the `$JMMPATH/bin` and `$JMMPATH/pkg` directories.
 
     jmm clean
 
+### jmm doc
+
+Prints [Markdown](https://daringfireball.net/projects/markdown/) documentation for a given Jmm class `doc [jmm_classpath]`.
+
+    jmm doc github.com.jminusminus.doc.Doc
+    // Prints the Markdown for class "github.com.jminusminus.doc.Doc" to stdout.
+
+Starts a web server using all documentation in the current Jmm workspace.
+
+    jmm doc
+    // Server started on port 8080, using 4 cores and 8 threads...
+    // Document server started at http://localhost:8080/
+    // Serving documentation from /Users/allinson/Java/jmmworkspace
+
 ### jmm env
 
 Prints the values of all Jmm environment variables.
