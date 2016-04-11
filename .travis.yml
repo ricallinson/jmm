@@ -4,4 +4,3 @@ script:
   - ./test/run.sh
 os:
   - linux
-  - osx
