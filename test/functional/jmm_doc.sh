@@ -9,8 +9,8 @@
 source ../jmm.sh
 error=$((0))
 data=$(jmm doc github.com.jminusminus.jmmdoc.DocTest)
-if [ "$data" != "goo" ]; then
-	echo $data
+if [[ "$data" != *"Pacakge text."* ]] || [[ "$data" != *"Class text."* ]] || [[ "$data" != *"Method() text."* ]]; then
+	echo "$data"
 	error=$((1))
 fi
 rm -rf "$JMMPATH/src/github/com/jminusminus/doc"
