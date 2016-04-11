@@ -523,11 +523,7 @@ jmv_here() {
 # @String $@ - Directory path(s)
 # Runs the lint rules over the given directories.
 jmm_lint() {
-    local files
-    for file in "$@"; do
-        files="$files $file"
-    done
-    result=$(java -jar "$JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar" -c "$JMMHOME/lint.xml" $files)
+    result=$(java -jar "$JMMHOME/vendor/checkstyle/checkstyle-6.14.1-all.jar" -c "$JMMHOME/lint.xml" $@)
     if [[ $? > 0 ]]; then
         echo "$result"
         return 1

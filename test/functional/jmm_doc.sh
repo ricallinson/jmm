@@ -7,13 +7,17 @@
 #
 
 source ../jmm.sh
-error=$((0))
-data=$(jmm doc github.com.jminusminus.jmmdoc.DocTest)
-if [[ "$data" != *"Pacakge text."* ]] || [[ "$data" != *"Class text."* ]] || [[ "$data" != *"Method() text."* ]]; then
+
+mkdir ./jmmtest
+cd ./jmmtest
+jmm here .
+jmm get github.com/jminusminus/jmmexample
+data=$(jmm doc github.com.jminusminus.jmmexample.Helloworld)
+cd ..
+rm -rf ./jmmtest
+
+if [[ "$data" != *"# Helloworld"* ]] || [[ "$data" != *"## github.com.jminusminus.jmmexample.Helloworld"* ]]; then
 	echo "$data"
-	error=$((1))
+	exit 1
 fi
-rm -rf "$JMMPATH/src/github/com/jminusminus/doc"
-rm -rf "$JMMPATH/src/github/com/jminusminus/simplebdd"
-rm -rf "$JMMPATH/src/github/com/ricallinson"
-exit $((error))
+exit 0
