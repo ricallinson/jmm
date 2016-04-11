@@ -27,4 +27,4 @@ if [ ! -f $packageDir/tmp.txt ]; then
 fi
 
 rm -rf $packageDir
-exit error
+exit $((error))

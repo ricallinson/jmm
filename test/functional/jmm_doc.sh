@@ -16,4 +16,4 @@ fi
 rm -rf "$JMMPATH/src/github/com/jminusminus/doc"
 rm -rf "$JMMPATH/src/github/com/jminusminus/simplebdd"
 rm -rf "$JMMPATH/src/github/com/ricallinson"
-exit error
+exit $((error))

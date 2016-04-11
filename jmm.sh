@@ -48,6 +48,18 @@ jmm_helper_path_resolve() {
     return 0
 }
 
+# @String $1 - Class path
+# Prints the jmm get url for the given class.
+jmm_helper_get_package_url() {
+    local parts
+    local package
+    parts=(${class//./ })
+    # domain.com/org/repo
+    package="${parts[0]}.${parts[1]}/${parts[2]}/${parts[3]}"
+    echo ${package%//}
+    return 0
+}
+
 # @String $1 - Directory path
 # @return "name"
 # Returns the jar name for a given directory path.
@@ -289,6 +301,44 @@ jmm_test_run_coverage() {
     return $(($failures))
 }
 
+# @String $1 - Directory path
+# Prints the classes imported in the given directory.
+jmm_list_classes() {
+    local path
+    path="$1"
+    if [[ -z "$path" ]]; then
+        path="."
+    fi
+    if [[ -d "$path" ]]; then
+        for dir in $path/*; do
+            jmm_list "$dir"
+        done
+    else
+        if [[ "$path" == *".java" ]]; then
+            for import in $(grep ^import "$1"); do
+                if [[ "$import" != "import" ]] && [[ -n "$import" ]] && [[ "$(jmm_helper_import_check "$import")" == "import" ]]; then
+                    import=${import//[;]/}
+                    echo "$import"
+                fi
+            done
+        fi
+    fi
+    return 0
+}
+
+# @String $1 - Directory path
+# Prints the packages used in the given directory.
+jmm_list_packages() {
+    local classes
+    local package
+    classes=$(jmm_list_classes $1)
+    for class in $classes; do
+        package=$(jmm_helper_get_package_url $class)
+        echo $package
+    done
+    return $?
+}
+
 #
 # Commands
 #
@@ -330,6 +380,7 @@ jmm_helper_resolve_dir_for_compile() {
 # Compiles the files in the given directory resolving all packages and places final jar in $JMMPATH/bin.
 jmm_install() {
     local files
+    local jarFiles
     local jar
     local script
     path=$(jmm_helper_path_resolve "$1")
@@ -337,16 +388,23 @@ jmm_install() {
     if [[ $? > 0 ]]; then
         return $?
     fi
-    # Find all imported packages and make sure they are installed.
-
+    # Find all imported packages and make sure they are installed first.
+    for package in $(jmm_list_packages $path); do
+        jmm_get $package
+    done
     # Get all the .java file paths.
     files=$(jmm_helper_resolve_dir_for_compile $path)
-    jmm_lint $files
+    # Remove test files
+    for file in $files; do
+        if [[ "$file" != *"_test.java" ]]; then
+            jarFiles="$jarFiles $file"
+        fi
+    done
+    jmm_lint $jarFiles
     if [[ $? > 0 ]]; then
         return $?
     fi
-    # Get missing packages.
-    jar=$(jmm_helper_build_jar $files)
+    jar=$(jmm_helper_build_jar $jarFiles)
     if [[ $? > 0 ]]; then
         echo $jar
         return 1
@@ -374,6 +432,7 @@ jmm_clean() {
 jmm_doc() {
     if [[ ! -f $JMMPATH/bin/doc ]]; then
         jmm_get "github.com/jminusminus/doc"
+        jmm_install "$JMMPATH/src/github/com/jminusminus/doc"
     fi
     $JMMPATH/bin/doc ${@}
     return $?
@@ -399,7 +458,7 @@ jmm_get() {
         if [[ ! -d "$JMMPATH/src/$packageDir" ]]; then
             # https://github.com/jminusminus/jmmexample
             git clone "https://$package.git" "$JMMPATH/src/$packageDir"
-            jmm_install "$JMMPATH/src/$packageDir"
+            # jmm_install "$JMMPATH/src/$packageDir"
         fi
     done
     return 0
@@ -475,38 +534,6 @@ jmm_lint() {
         return 1
     fi
     return 0
-}
-
-# @String $1 - Directory path
-# Prints the packages used in the given directory.
-jmm_list_classes() {
-    local path
-    path="$1"
-    if [[ -z "$path" ]]; then
-        path="."
-    fi
-    if [[ -d "$path" ]]; then
-        for dir in $path/*; do
-            jmm_list "$dir"
-        done
-    else
-        if [[ "$path" == *".java" ]]; then
-            for import in $(grep ^import "$1"); do
-                if [[ "$import" != "import" ]] && [[ -n "$import" ]] && [[ "$(jmm_helper_import_check "$import")" == "import" ]]; then
-                    import=${import//[;]/}
-                    echo "$import"
-                fi
-            done
-        fi
-    fi
-    return 0
-}
-
-# @String $1 - Directory path
-# Prints the packages used in the given directory.
-jmm_list_packages() {
-    jmm_list_classes $1
-    return $?
 }
 
 # @String $1 - Directory path
