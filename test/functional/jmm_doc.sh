@@ -12,14 +12,12 @@ mkdir ./jmmtest
 cd ./jmmtest
 jmm here .
 jmm get github.com/jminusminus/jmmexample
-jmm install ./src/github/com/jminusminus/jmmexample
-data=$(jmmexample)
+data=$(jmm doc github.com.jminusminus.jmmexample.Helloworld)
 cd ..
 rm -rf ./jmmtest
 
-if [ "$data" = "Congratulations on your first Jmm application." ]; then
-	exit 0
+if [[ "$data" != *"# Helloworld"* ]] || [[ "$data" != *"## github.com.jminusminus.jmmexample.Helloworld"* ]]; then
+	echo "$data"
+	exit 1
 fi
-echo "Failed to complete the example."
-echo "$data"
-exit 1
+exit 0
