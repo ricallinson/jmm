@@ -12,6 +12,7 @@ mkdir ./jmmtest
 cd ./jmmtest
 jmm here .
 jmm get github.com/jminusminus/jmmexample
+jmm get github.com/jminusminus/simplebdd
 jmm install ./src/github/com/jminusminus/jmmexample
 data=$(jmmexample)
 cd ..
