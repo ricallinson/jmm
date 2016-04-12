@@ -11,6 +11,9 @@ package github.com.jminusminus.jmm;
 
 public class Jmm {
 
+    // The version of Jmm.
+    public static final String version = "0.0.1";
+
     public static void main(String[] args) {
         String command = "";
         if (args.length > 0) {
@@ -28,17 +31,39 @@ public class Jmm {
     public void info(String command) {
         switch (command) {
             case "help":
-                System.out.println("help");
-                return;
+                System.out.println("");
+                System.out.println("The tool for managing Jmm source code.");
+                System.out.println("");
+                System.out.println("Usage:");
+                System.out.println("");
+                System.out.println("    jmm command [arguments]");
+                System.out.println("");
+                System.out.println("The commands are:");
+                System.out.println("");
+                System.out.println("    install     compile packages and dependencies");
+                System.out.println("    clean       remove object files");
+                System.out.println("    doc         show documentation for package or workspace");
+                System.out.println("    env         print Jmm environment information");
+                System.out.println("    lint        run lint check on package sources");
+                System.out.println("    get         download and install packages and dependencies (currently works with github.com only)");
+                System.out.println("    here        set /Users/allinson/Java/jmm to the given directory");
+                System.out.println("    list        list packages");
+                System.out.println("    run         compile and run Jmm program (the first file must have the main method)");
+                System.out.println("    test        test packages");
+                System.out.println("    version     print Jmm version");
+                System.out.println("");
+                System.exit(0);
             case "here":
                 System.out.println("here");
-                return;
+                System.exit(0);
             case "env":
-                System.out.println("env");
-                return;
+                System.out.println("JMMPATH=" + System.getenv("JMMPATH"));
+                System.out.println("JMMHOME=" + System.getenv("JMMHOME"));
+                System.out.println("JAVA_HOME=" + System.getenv("JAVA_HOME"));
+                System.exit(0);
             case "version":
-                System.out.println("version");
-                return;
+                System.out.println(version);
+                System.exit(0);
         }
     }
 
@@ -46,20 +71,16 @@ public class Jmm {
         switch (command) {
             case "clean":
                 System.out.println("clean");
-                return;
+                System.exit(0);
             case "doc":
                 System.out.println("doc");
-                return;
+                System.exit(0);
             case "list":
                 System.out.println("list");
-                return;
+                System.exit(0);
             case "run-script":
                 System.out.println("run-script");
-                return;
-            default:
-                System.out.println("jmm: unknown command " + command);
-                System.out.println("Run 'go help' for usage.");
-                System.exit(1);
+                System.exit(0);
         }
     }
 
@@ -67,19 +88,19 @@ public class Jmm {
         switch (command) {
             case "get":
                 System.out.println("get");
-                return;
+                System.exit(0);
             case "install":
                 System.out.println("install");
-                return;
+                System.exit(0);
             case "lint":
                 System.out.println("lint");
-                return;
+                System.exit(0);
             case "run":
                 System.out.println("run");
-                return;
+                System.exit(0);
             case "test":
                 System.out.println("test");
-                return;
+                System.exit(0);
         }
     }
 }
