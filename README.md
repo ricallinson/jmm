@@ -115,12 +115,6 @@ The following will list packages in the current working directory.
 
     jmm list
 
-### jmm run
-
-Provide one or more `.java` files to run. The first file must have the main method. A `.jar` named the same as the first class files directory is created and placed in the `$JMMPATH/bin` directory. Note: this will overwrite an existing `.jar` if it has the same name.
-
-    jmm run ./src/github/com/jminusminus/jmmrun/RunClass.java ./src/github/com/jminusminus/jmmrun/OtherClass.java
-
 ### run-script
 
 Execute a script in a packages `scripts` folder. From within a Jmm workspace;
