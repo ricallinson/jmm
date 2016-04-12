@@ -16,7 +16,7 @@ data=$(jmm doc github.com.jminusminus.jmmexample.Helloworld)
 cd ..
 rm -rf ./jmmtest
 
-if [[ "$data" != *"# Helloworld"* ]] || [[ "$data" != *"## github.com.jminusminus.jmmexample.Helloworld"* ]]; then
+if [[ "$data" != *"# Helloworld"* ]] || [[ "$data" != *"## Class: github.com.jminusminus.jmmexample.Helloworld"* ]]; then
 	echo "$data"
 	exit 1
 fi
