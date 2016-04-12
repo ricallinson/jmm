@@ -11,7 +11,16 @@ package github.com.jminusminus.jmm;
 
 public class Jmm {
 
-	public static void main(String[] args) {
-        
+    public static void main(String[] args) {
+        String command = "";
+        if (args.length > 0) {
+            command = args[0];
+        }
+        switch (command) {
+            default:
+                System.out.println("jmm: unknown command " + command);
+                System.out.println("Run 'go help' for usage.");
+                System.exit(1);
+        }
     }
 }
