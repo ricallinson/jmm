@@ -9,26 +9,34 @@
 // This package contains the CLI for the Jmm tool.
 package github.com.jminusminus.jmm;
 
+import github.com.jminusminus.core.Path;
+import github.com.jminusminus.core.FileSystem;
+
 public class Jmm {
 
-    // The version of Jmm.
-    public static final String version = "0.0.1";
-
+    // The tool for managing Jmm source code.
     public static void main(String[] args) {
         String command = "";
+        String arg = "";
         if (args.length > 0) {
             command = args[0];
         }
+        if (args.length > 1) {
+            arg = args[1];
+        }
         Jmm jmm = new Jmm();
-        jmm.info(command);
-        jmm.action(command);
-        jmm.execute(command);
+        jmm.info(command, arg);
+        jmm.action(command, arg);
+        jmm.execute(command, arg);
         System.out.println("jmm: unknown command " + command);
         System.out.println("Run 'go help' for usage.");
         System.exit(1);
     }
 
-    public void info(String command) {
+    // The version of Jmm.
+    protected static final String version = "0.0.1";
+
+    protected void info(String command, String arg) {
         switch (command) {
             case "help":
                 System.out.println("");
@@ -54,7 +62,7 @@ public class Jmm {
                 System.out.println("");
                 System.exit(0);
             case "here":
-                System.out.println("here");
+                this.here(arg);
                 System.exit(0);
             case "env":
                 System.out.println("JMMPATH=" + System.getenv("JMMPATH"));
@@ -62,12 +70,12 @@ public class Jmm {
                 System.out.println("JAVA_HOME=" + System.getenv("JAVA_HOME"));
                 System.exit(0);
             case "version":
-                System.out.println(version);
+                System.out.println(this.version);
                 System.exit(0);
         }
     }
 
-    public void action(String command) {
+    protected void action(String command, String arg) {
         switch (command) {
             case "clean":
                 System.out.println("clean");
@@ -84,7 +92,7 @@ public class Jmm {
         }
     }
 
-    public void execute(String command) {
+    protected void execute(String command, String arg) {
         switch (command) {
             case "get":
                 System.out.println("get");
@@ -102,5 +110,24 @@ public class Jmm {
                 System.out.println("test");
                 System.exit(0);
         }
+    }
+
+    protected void here(String path) {
+        path = Path.normalize(path);
+        while (!path.isEmpty()) {
+            String[] files = FileSystem.readdir(path);
+            if (files == null) {
+                System.out.println("Error with given path: " + path);
+                return;
+            }
+            for (String file : files) {
+                if ("src".equals(file)) {
+                    System.out.println("Jmm workspace set to: " + path);
+                    return;
+                }
+            }
+            path = Path.dirname(path);
+        }
+        System.out.println("Jmm workspace not found.");
     }
 }
