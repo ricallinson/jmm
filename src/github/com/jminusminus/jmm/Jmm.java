@@ -48,26 +48,22 @@ public class Jmm {
                 System.out.println("");
                 System.out.println("The commands are:");
                 System.out.println("");
-                System.out.println("    install     compile packages and dependencies");
-                System.out.println("    clean       remove object files");
-                System.out.println("    doc         show documentation for package or workspace");
-                System.out.println("    env         print Jmm environment information");
-                System.out.println("    lint        run lint check on package sources");
-                System.out.println("    get         download and install packages and dependencies (currently works with github.com only)");
-                System.out.println("    here        set /Users/allinson/Java/jmm to the given directory");
-                System.out.println("    list        list packages");
-                System.out.println("    run         compile and run Jmm program (the first file must have the main method)");
-                System.out.println("    test        test packages");
-                System.out.println("    version     print Jmm version");
+                System.out.println("    install     (N/A) compile packages and dependencies");
+                System.out.println("    clean       (N/A) remove object files");
+                System.out.println("    doc         (N/A) show documentation for package or workspace");
+                System.out.println("    env         (N/A) print Jmm environment information");
+                System.out.println("    lint        (N/A) run lint check on package sources");
+                System.out.println("    get         (N/A) download and install packages and dependencies (currently works with github.com only)");
+                System.out.println("    help        list of available Jmm commands");
+                System.out.println("    here        set the Jmm workspace to the given directory");
+                System.out.println("    list        (N/A) list packages");
+                System.out.println("    run         (N/A) compile and run Jmm program (the first file must have the main method)");
+                System.out.println("    test        (N/A) test packages");
+                System.out.println("    version     print the Jmm version");
                 System.out.println("");
                 System.exit(0);
             case "here":
-                if (!this.setJmmPath(arg)) {
-                    System.out.println("You must run this command in a Jmm workspace");
-                    System.exit(1);
-                }
-                System.out.println("Jmm workspace set to " + System.getProperty("JMMPATH"));
-                System.exit(0);
+                System.exit(this.here(arg));
             case "env":
                 System.out.println("JMMPATH=" + System.getenv("JMMPATH"));
                 System.out.println("JMMHOME=" + System.getenv("JMMHOME"));
@@ -116,12 +112,43 @@ public class Jmm {
         }
     }
 
+    protected int here(String path) {
+        if (path == null || path.isEmpty()) {
+            if (!this.setJmmPath(path)) {
+                System.out.println("You must run this command in a Jmm workspace");
+                return 1;
+            }
+        } else {
+            if (!this.createJmmWorkspace(path)) {
+                System.out.println("Could not create Jmm workspace");
+                return 1;
+            }
+        }
+        System.out.println("Jmm workspace set to " + System.getProperty("JMMPATH"));
+        return 0;
+    }
+
     protected boolean setJmmPath(String path) {
         String jmmPath = this.findJmmSrc(path);
         if (jmmPath == null) {
             return false;
         }
         System.setProperty("JMMPATH", jmmPath);
+        return true;
+    }
+
+    protected boolean createJmmWorkspace(String path) {
+        path = Path.resolve(path);
+        if (!Fs.mkdirs(Path.join(path, "bin"))) {
+            return false;
+        }
+        if (!Fs.mkdirs(Path.join(path, "pkg"))) {
+            return false;
+        }
+        if (!Fs.mkdirs(Path.join(path, "src"))) {
+            return false;
+        }
+        System.setProperty("JMMPATH", path);
         return true;
     }
 
