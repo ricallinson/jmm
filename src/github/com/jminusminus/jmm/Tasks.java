@@ -44,8 +44,8 @@ public class Tasks {
         return path;
     }
 
-    public boolean cleanWorkspace() {
-        String path = System.getenv("JMMPATH");
+    public boolean cleanWorkspace(String path) {
+        path = Path.resolve(path);
         if (path == null || path.isEmpty()) {
             return false;
         }

@@ -126,7 +126,7 @@ public class JmmCli {
 
     protected int clean() {
         Tasks t = new Tasks();
-        if (!t.cleanWorkspace()) {
+        if (!t.cleanWorkspace(System.getenv("JMMPATH"))) {
             System.out.println("Could not clean Jmm workspace");
             return 1;
         }
