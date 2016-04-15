@@ -12,7 +12,7 @@ package github.com.jminusminus.jmm;
 import github.com.jminusminus.core.Path;
 import github.com.jminusminus.core.Fs;
 
-public class Jmm {
+public class JmmCli {
 
     // The tool for managing Jmm source code.
     public static void main(String[] args) {
@@ -24,7 +24,7 @@ public class Jmm {
         if (args.length > 1) {
             arg = args[1];
         }
-        Jmm jmm = new Jmm();
+        JmmCli jmm = new JmmCli();
         jmm.info(command, arg);
         jmm.action(command, arg);
         jmm.execute(command, arg);
