@@ -9,9 +9,6 @@
 // This package contains the CLI for the Jmm tool.
 package github.com.jminusminus.jmm;
 
-import github.com.jminusminus.core.Path;
-import github.com.jminusminus.core.Fs;
-
 public class JmmCli {
 
     // The tool for managing Jmm source code.
@@ -34,7 +31,7 @@ public class JmmCli {
     }
 
     // The version of Jmm.
-    protected static final String version = "0.0.1";
+    protected static final String version = "0.0.2";
 
     protected void info(String command, String arg) {
         switch (command) {
@@ -51,7 +48,7 @@ public class JmmCli {
                 System.out.println("    install     (N/A) compile packages and dependencies");
                 System.out.println("    clean       (N/A) remove object files");
                 System.out.println("    doc         (N/A) show documentation for package or workspace");
-                System.out.println("    env         (N/A) print Jmm environment information");
+                System.out.println("    env         print Jmm environment information");
                 System.out.println("    lint        (N/A) run lint check on package sources");
                 System.out.println("    get         (N/A) download and install packages and dependencies (currently works with github.com only)");
                 System.out.println("    help        list of available Jmm commands");
@@ -78,8 +75,7 @@ public class JmmCli {
     protected void action(String command, String arg) {
         switch (command) {
             case "clean":
-                System.out.println("clean");
-                System.exit(0);
+                System.exit(this.clean());
             case "doc":
                 System.out.println("doc");
                 System.exit(0);
@@ -113,13 +109,14 @@ public class JmmCli {
     }
 
     protected int here(String path) {
+        Tasks t = new Tasks();
         if (path == null || path.isEmpty()) {
-            if (!this.setJmmPath(path)) {
+            if (!t.setJmmPath(path)) {
                 System.out.println("You must run this command in a Jmm workspace");
                 return 1;
             }
         } else {
-            if (!this.createJmmWorkspace(path)) {
+            if (!t.createJmmWorkspace(path)) {
                 System.out.println("Could not create Jmm workspace");
                 return 1;
             }
@@ -128,44 +125,12 @@ public class JmmCli {
         return 0;
     }
 
-    protected boolean setJmmPath(String path) {
-        String jmmPath = this.findJmmSrc(path);
-        if (jmmPath == null) {
-            return false;
+    protected int clean() {
+        Tasks t = new Tasks();
+        if (!t.cleanWorkspace()) {
+            System.out.println("Could not clean Jmm workspace");
+            return 1;
         }
-        System.setProperty("JMMPATH", jmmPath);
-        return true;
-    }
-
-    protected boolean createJmmWorkspace(String path) {
-        path = Path.resolve(path);
-        if (!Fs.mkdirs(Path.join(path, "bin"))) {
-            return false;
-        }
-        if (!Fs.mkdirs(Path.join(path, "pkg"))) {
-            return false;
-        }
-        if (!Fs.mkdirs(Path.join(path, "src"))) {
-            return false;
-        }
-        System.setProperty("JMMPATH", path);
-        return true;
-    }
-
-    protected String findJmmSrc(String path) {
-        path = Path.resolve(path);
-        while (!path.isEmpty()) {
-            String[] files = Fs.readdir(path);
-            if (files == null) {
-                return null;
-            }
-            for (String file : files) {
-                if ("src".equals(file)) {
-                    return path;
-                }
-            }
-            path = Path.dirname(path);
-        }
-        return null;
+        return 0;
     }
 }
