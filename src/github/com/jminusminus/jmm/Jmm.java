@@ -10,7 +10,7 @@
 package github.com.jminusminus.jmm;
 
 import github.com.jminusminus.core.Path;
-import github.com.jminusminus.core.FileSystem;
+import github.com.jminusminus.core.Fs;
 
 public class Jmm {
 
@@ -62,7 +62,11 @@ public class Jmm {
                 System.out.println("");
                 System.exit(0);
             case "here":
-                this.here(arg);
+                if (!this.setJmmPath(arg)) {
+                    System.out.println("You must run this command in a Jmm workspace");
+                    System.exit(1);
+                }
+                System.out.println("Jmm workspace set to " + System.getProperty("JMMPATH"));
                 System.exit(0);
             case "env":
                 System.out.println("JMMPATH=" + System.getenv("JMMPATH"));
@@ -112,22 +116,29 @@ public class Jmm {
         }
     }
 
-    protected void here(String path) {
-        path = Path.normalize(path);
+    protected boolean setJmmPath(String path) {
+        String jmmPath = this.findJmmSrc(path);
+        if (jmmPath == null) {
+            return false;
+        }
+        System.setProperty("JMMPATH", jmmPath);
+        return true;
+    }
+
+    protected String findJmmSrc(String path) {
+        path = Path.resolve(path);
         while (!path.isEmpty()) {
-            String[] files = FileSystem.readdir(path);
+            String[] files = Fs.readdir(path);
             if (files == null) {
-                System.out.println("Error with given path: " + path);
-                return;
+                return null;
             }
             for (String file : files) {
                 if ("src".equals(file)) {
-                    System.out.println("Jmm workspace set to: " + path);
-                    return;
+                    return path;
                 }
             }
             path = Path.dirname(path);
         }
-        System.out.println("Jmm workspace not found.");
+        return null;
     }
 }
