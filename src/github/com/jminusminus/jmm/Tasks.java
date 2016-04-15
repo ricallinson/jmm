@@ -13,16 +13,21 @@ import github.com.jminusminus.core.Fs;
 
 public class Tasks {
 
-    public boolean setJmmPath(String path) {
-        String jmmPath = this.findJmmSrc(path);
+    public boolean setWorkspacePath(String path) {
+        String jmmPath = this.findWorkspaceSrc(path);
         if (jmmPath == null) {
             return false;
         }
-        System.setProperty("JMMPATH", jmmPath);
+        try {
+            java.lang.Runtime.getRuntime().exec("/bin/bash export JMMPATH=" + jmmPath);
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
         return true;
     }
 
-    public boolean createJmmWorkspace(String path) {
+    public boolean createWorkspace(String path) {
         path = Path.resolve(path);
         if (!Fs.mkdirs(Path.join(path, "bin"))) {
             return false;
@@ -33,15 +38,30 @@ public class Tasks {
         if (!Fs.mkdirs(Path.join(path, "src"))) {
             return false;
         }
-        System.setProperty("JMMPATH", path);
+        try {
+            java.lang.Runtime.getRuntime().exec("/bin/bash export JMMPATH=" + path);
+        } catch (Exception e) {
+            System.out.println(e);
+            return false;
+        }
         return true;
     }
 
     public boolean cleanWorkspace() {
-        return false;
+        String path = System.getenv("JMMPATH");
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+        if (!Fs.rmdirr(Path.join(path, "bin"))) {
+            return false;
+        }
+        if (!Fs.rmdirr(Path.join(path, "pkg"))) {
+            return false;
+        }
+        return true;
     }
 
-    protected String findJmmSrc(String path) {
+    protected String findWorkspaceSrc(String path) {
         path = Path.resolve(path);
         while (!path.isEmpty()) {
             String[] files = Fs.readdir(path);

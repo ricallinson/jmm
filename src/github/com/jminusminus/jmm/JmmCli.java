@@ -111,17 +111,17 @@ public class JmmCli {
     protected int here(String path) {
         Tasks t = new Tasks();
         if (path == null || path.isEmpty()) {
-            if (!t.setJmmPath(path)) {
+            if (!t.setWorkspacePath(path)) {
                 System.out.println("You must run this command in a Jmm workspace");
                 return 1;
             }
         } else {
-            if (!t.createJmmWorkspace(path)) {
+            if (!t.createWorkspace(path)) {
                 System.out.println("Could not create Jmm workspace");
                 return 1;
             }
         }
-        System.out.println("Jmm workspace set to " + System.getProperty("JMMPATH"));
+        System.out.println("Jmm workspace set to " + System.getenv("JMMPATH"));
         return 0;
     }
 
