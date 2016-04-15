@@ -65,7 +65,7 @@ public class JmmCli {
                 System.out.println("    help        list of available Jmm commands");
                 System.out.println("    here        set the Jmm workspace to the given directory");
                 System.out.println("    list        (N/A) list packages");
-                System.out.println("    run         (N/A) compile and run Jmm program (the first file must have the main method)");
+                // System.out.println("    run         (N/A) compile and run Jmm program (the first file must have the main method)");
                 System.out.println("    test        (N/A) test packages");
                 System.out.println("    version     print the Jmm version");
                 System.out.println("");
