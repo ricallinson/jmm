@@ -13,55 +13,7 @@ import github.com.jminusminus.core.Fs;
 
 public class Tasks {
 
-    public boolean setWorkspacePath(String path) {
-        String jmmPath = this.findWorkspaceSrc(path);
-        if (jmmPath == null) {
-            return false;
-        }
-        try {
-            java.lang.Runtime.getRuntime().exec("/bin/bash export JMMPATH=" + jmmPath);
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    public boolean createWorkspace(String path) {
-        path = Path.resolve(path);
-        if (!Fs.mkdirs(Path.join(path, "bin"))) {
-            return false;
-        }
-        if (!Fs.mkdirs(Path.join(path, "pkg"))) {
-            return false;
-        }
-        if (!Fs.mkdirs(Path.join(path, "src"))) {
-            return false;
-        }
-        try {
-            java.lang.Runtime.getRuntime().exec("/bin/bash export JMMPATH=" + path);
-        } catch (Exception e) {
-            System.out.println(e);
-            return false;
-        }
-        return true;
-    }
-
-    public boolean cleanWorkspace() {
-        String path = System.getenv("JMMPATH");
-        if (path == null || path.isEmpty()) {
-            return false;
-        }
-        if (!Fs.rmdirr(Path.join(path, "bin"))) {
-            return false;
-        }
-        if (!Fs.rmdirr(Path.join(path, "pkg"))) {
-            return false;
-        }
-        return true;
-    }
-
-    protected String findWorkspaceSrc(String path) {
+    public String getWorkspacePath(String path) {
         path = Path.resolve(path);
         while (!path.isEmpty()) {
             String[] files = Fs.readdir(path);
@@ -76,5 +28,33 @@ public class Tasks {
             path = Path.dirname(path);
         }
         return null;
+    }
+
+    public String createWorkspace(String path) {
+        path = Path.resolve(path);
+        if (!Fs.mkdirs(Path.join(path, "bin"))) {
+            return null;
+        }
+        if (!Fs.mkdirs(Path.join(path, "pkg"))) {
+            return null;
+        }
+        if (!Fs.mkdirs(Path.join(path, "src"))) {
+            return null;
+        }
+        return path;
+    }
+
+    public boolean cleanWorkspace() {
+        String path = System.getenv("JMMPATH");
+        if (path == null || path.isEmpty()) {
+            return false;
+        }
+        if (!Fs.rmdirr(Path.join(path, "bin"))) {
+            return false;
+        }
+        if (!Fs.rmdirr(Path.join(path, "pkg"))) {
+            return false;
+        }
+        return true;
     }
 }

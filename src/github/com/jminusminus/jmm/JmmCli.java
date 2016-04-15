@@ -52,7 +52,8 @@ public class JmmCli {
                 System.out.println("    lint        (N/A) run lint check on package sources");
                 System.out.println("    get         (N/A) download and install packages and dependencies (currently works with github.com only)");
                 System.out.println("    help        list of available Jmm commands");
-                System.out.println("    here        set the Jmm workspace to the given directory");
+                // Looks like this can only be done from the shell.
+                System.out.println("    here        (N/A) set the Jmm workspace to the given directory");
                 System.out.println("    list        (N/A) list packages");
                 System.out.println("    run         (N/A) compile and run Jmm program (the first file must have the main method)");
                 System.out.println("    test        (N/A) test packages");
@@ -110,18 +111,16 @@ public class JmmCli {
 
     protected int here(String path) {
         Tasks t = new Tasks();
+        String jmmPath;
         if (path == null || path.isEmpty()) {
-            if (!t.setWorkspacePath(path)) {
-                System.out.println("You must run this command in a Jmm workspace");
-                return 1;
-            }
+            jmmPath = t.getWorkspacePath(path);
         } else {
-            if (!t.createWorkspace(path)) {
-                System.out.println("Could not create Jmm workspace");
-                return 1;
-            }
+            jmmPath = t.createWorkspace(path);
         }
-        System.out.println("Jmm workspace set to " + System.getenv("JMMPATH"));
+        if (jmmPath == null) {
+            return 1;
+        }
+        System.out.println(jmmPath);
         return 0;
     }
 
