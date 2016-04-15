@@ -49,10 +49,10 @@ public class Tasks {
         if (path == null || path.isEmpty()) {
             return false;
         }
-        if (!Fs.rmdirr(Path.join(path, "bin"))) {
+        if (!Fs.rmdirr(Path.join(path, "bin")) || !Fs.mkdirs(Path.join(path, "bin"))) {
             return false;
         }
-        if (!Fs.rmdirr(Path.join(path, "pkg"))) {
+        if (!Fs.rmdirr(Path.join(path, "pkg")) || !Fs.mkdirs(Path.join(path, "pkg"))) {
             return false;
         }
         return true;
