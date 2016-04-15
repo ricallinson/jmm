@@ -9,22 +9,33 @@
 // This package contains the CLI for the Jmm tool.
 package github.com.jminusminus.jmm;
 
+import github.com.jminusminus.doc.Doc;
+
 public class JmmCli {
 
     // The tool for managing Jmm source code.
     public static void main(String[] args) {
         String command = "";
         String arg = "";
+        // Get the command to execute.
         if (args.length > 0) {
             command = args[0];
         }
+        // Get the argument that was given.
         if (args.length > 1) {
             arg = args[1];
         }
-        JmmCli jmm = new JmmCli();
-        jmm.info(command, arg);
-        jmm.action(command, arg);
-        jmm.execute(command, arg);
+        JmmCli jmmCli = new JmmCli();
+        // The document server has to start here so it doesn't exit().
+        if ("doc".equals(command)) {
+            jmmCli.doc(arg);
+            return;
+        }
+        // Pass the command on to see what needs doing.
+        jmmCli.info(command, arg);
+        jmmCli.action(command, arg);
+        jmmCli.execute(command, arg);
+        // If we didn't exit then the command was not found.
         System.out.println("jmm: unknown command " + command);
         System.out.println("Run 'go help' for usage.");
         System.exit(1);
@@ -46,14 +57,13 @@ public class JmmCli {
                 System.out.println("The commands are:");
                 System.out.println("");
                 System.out.println("    install     (N/A) compile packages and dependencies");
-                System.out.println("    clean       (N/A) remove object files");
-                System.out.println("    doc         (N/A) show documentation for package or workspace");
+                System.out.println("    clean       remove object files");
+                System.out.println("    doc         show documentation for package or workspace");
                 System.out.println("    env         print Jmm environment information");
                 System.out.println("    lint        (N/A) run lint check on package sources");
                 System.out.println("    get         (N/A) download and install packages and dependencies (currently works with github.com only)");
                 System.out.println("    help        list of available Jmm commands");
-                // Looks like this can only be done from the shell.
-                System.out.println("    here        (N/A) set the Jmm workspace to the given directory");
+                System.out.println("    here        set the Jmm workspace to the given directory");
                 System.out.println("    list        (N/A) list packages");
                 System.out.println("    run         (N/A) compile and run Jmm program (the first file must have the main method)");
                 System.out.println("    test        (N/A) test packages");
@@ -61,6 +71,8 @@ public class JmmCli {
                 System.out.println("");
                 System.exit(0);
             case "here":
+                // $JMMPATH can only be set in the shell.
+                // This will output the final path and a script will set the environment variable.
                 System.exit(this.here(arg));
             case "env":
                 System.out.println("JMMPATH=" + System.getenv("JMMPATH"));
@@ -77,9 +89,6 @@ public class JmmCli {
         switch (command) {
             case "clean":
                 System.exit(this.clean());
-            case "doc":
-                System.out.println("doc");
-                System.exit(0);
             case "list":
                 System.out.println("list");
                 System.exit(0);
@@ -131,5 +140,16 @@ public class JmmCli {
             return 1;
         }
         return 0;
+    }
+
+    protected void doc(String jmmClass) {
+        Doc doc = new Doc();
+        if (jmmClass != null && !jmmClass.isEmpty()) {
+            System.out.println("");
+            System.out.println(doc.getDoc(jmmClass));
+            System.out.println("");
+            return;
+        }
+        doc.startServer(8080);
     }
 }
