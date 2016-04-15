@@ -55,4 +55,10 @@ public class Tasks_test extends Test {
         this.assertEqual(false, Fs.access("./fixtures/tmp/pkg/bar"));
         Fs.rmdirr("./fixtures/tmp");
     }
+
+    public void test_listPackages() {
+        this.should("return a list of all the packages in the workspace");
+        String[] p = this.t.listPackages(System.getenv("JMMPATH") + "/examples");
+        this.assertEqual(10, p.length);
+    }
 }

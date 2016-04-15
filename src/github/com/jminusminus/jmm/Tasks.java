@@ -8,6 +8,7 @@
 // This package contains tasks performed by the JmmCli.
 package github.com.jminusminus.jmm;
 
+import github.com.jminusminus.core.Arrays;
 import github.com.jminusminus.core.Path;
 import github.com.jminusminus.core.Fs;
 
@@ -56,5 +57,30 @@ public class Tasks {
             return false;
         }
         return true;
+    }
+
+    public String[] listPackages(String path) {
+        path = Path.resolve(path);
+        String[] files = Fs.readdirr(path);
+        String[] javaFiles = new String[0];
+        for (String f : files) {
+            if (f.endsWith(".java")) {
+                javaFiles = Arrays.append(javaFiles, f);
+            }
+        }
+        return this.findPackages(javaFiles);
+    }
+
+    protected String[] findPackages(String[] files) {
+        String[] packages = new String[0];
+        for (String f : files) {
+            String txt = new String(Fs.readFile(f));
+            // Find pacakge line in txt.
+            int start = txt.indexOf("package") + 8;
+            int end = txt.indexOf(";", start);
+            String p = txt.substring(start, end);
+            System.out.println(p);
+        }
+        return packages;
     }
 }

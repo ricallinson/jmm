@@ -90,8 +90,7 @@ public class JmmCli {
             case "clean":
                 System.exit(this.clean());
             case "list":
-                System.out.println("list");
-                System.exit(0);
+                System.exit(this.list(arg));
             case "run-script":
                 System.out.println("run-script");
                 System.exit(0);
@@ -151,5 +150,11 @@ public class JmmCli {
             return;
         }
         doc.startServer(8080);
+    }
+
+    protected int list(String path) {
+        Tasks t = new Tasks();
+        System.out.println(t.listPackages(path));
+        return 0;
     }
 }
