@@ -75,11 +75,16 @@ public class Tasks {
         String[] packages = new String[0];
         for (String f : files) {
             String txt = new String(Fs.readFile(f));
-            // Find pacakge line in txt.
+            // Find package line in txt.
             int start = txt.indexOf("package") + 8;
             int end = txt.indexOf(";", start);
-            String p = txt.substring(start, end);
-            System.out.println(p);
+            String importStr = txt.substring(start, end);
+            // Get the package name from the import string.
+            // github.com.org.repo
+            String packageStr = String.join(".", Arrays.slice(importStr.split("\\."), 0, 4));
+            if (!packageStr.isEmpty()) {
+                packages = Arrays.append(packages, packageStr);
+            }
         }
         return packages;
     }
